@@ -139,7 +139,7 @@ function init(){
 
 
   // dessiner une plateforme
-  let plateforme = face_elementaire(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, -15, 0), "#0000FF");
+  let plateforme = face_elementaire(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, -15, 0), "#0037b8");
   ajouter(plateforme);
 
 
@@ -170,7 +170,7 @@ function init(){
 
   let pts_gauche = bezier(p1, p2, p3, p4, 36);
 
-  let bezier_gauche = cuisine_courbe(pts_gauche, "#00AA00");
+  let bezier_gauche = cuisine_courbe(pts_gauche, "#1afc3f");
 
 
 
@@ -185,19 +185,19 @@ function init(){
 
   let pts_droite = bezier(p1_, p2_, p3_, p4_, 36);
 
-  let bezier_droite = cuisine_courbe(pts_droite, "#ff6000");
+  let bezier_droite = cuisine_courbe(pts_droite, "#fa865c");
 
 
 
 
   //preparer les points d'une ligne grise a gauche
   let pts_ligne_gauche = ligne_plane(30, -4.1, -6, -2, 36)
-  let ligne_gauche = cuisine_courbe(pts_ligne_gauche);
+  let ligne_gauche = cuisine_courbe(pts_ligne_gauche, "#1afc3f");
 
 
   //preparer les points d'une ligne grise a droite
   let pts_ligne_droite = ligne_plane(30, -4.1 + translation, -6, -2 + translation, 36);
-  let ligne_droite = cuisine_courbe(pts_ligne_droite);
+  let ligne_droite = cuisine_courbe(pts_ligne_droite, "#fa865c");
 
 
 
@@ -212,10 +212,26 @@ function init(){
 
 
 
+  //this is just trying out !!
+  let sphereG = new THREE.SphereGeometry (0.5, 100, 60 );
+  let material = new THREE.MeshPhongMaterial({ 
+      color: "#0DAD87", 
+      opacity: 1,
+      transparent: true, 
+      wireframe: true,
+      emissive : {r:2, g:2, b:2},
+      specular : {r:0, g:255, b:255},
+      shininess : 45,
+  } );
+  let sphere = new THREE.Mesh( sphereG, material );
 
+  sphere.position.x = 20;
+  sphere.position.y = 5;
+  sphere.position.z = 0.5;
 
+  scene.add( sphere );
 
-
+  // console.log(sphere.position);
 
 
 
@@ -277,7 +293,7 @@ function init(){
 
 
 
-
+//__________________________DEBUT DU MENU CAMERA___________________
  camera.position.x = 35;
  camera.position.y = 0;
  camera.position.z = 5;
@@ -298,30 +314,40 @@ function init(){
  }
 
  let cam = gui.addFolder("Camera");
- cam.add(menu, "xPos", -20, 20).onChange(function () {
+ cam.add(menu, "xPos", -40, 40).onChange(function () {
   camera.position.x = menu.xPos;
  });
- cam.add(menu, "yPos", -20, 20).onChange(function () {
+ cam.add(menu, "yPos", -40, 40).onChange(function () {
   camera.position.y = menu.yPos;
  });
- cam.add(menu, "zPos", -20, 20).onChange(function () {
+ cam.add(menu, "zPos", -40, 40).onChange(function () {
   camera.position.z = menu.zPos;
  });
- cam.add(menu, "zoom", 0, 20).onChange(function () {
+ cam.add(menu, "zoom", 0, 40).onChange(function () {
   camera.zoom = menu.zoom;
   camera.updateProjectionMatrix();
   });
- cam.add(menu, "xDir", -20, 20).onChange(function () {
+ cam.add(menu, "xDir", -40, 40).onChange(function () {
   camera.lookAt(menu.xDir, menu.yDir, menu.zDir);
  });
- cam.add(menu, "yDir", -20, 20).onChange(function () {
+ cam.add(menu, "yDir", -40, 40).onChange(function () {
   camera.lookAt(menu.xDir, menu.yDir, menu.zDir);
  });
- cam.add(menu, "zDir", -20, 20).onChange(function () {
+ cam.add(menu, "zDir", -40, 40).onChange(function () {
   camera.lookAt(menu.xDir, menu.yDir, menu.zDir);
  });
 
 
+ //______________________________FIN DE MENU CAMERA__________________
+
+ 
+
+
+
+
+ // dessiner une trajectoire rectiligne pour chaque équipe:
+ ajouter(ligne_gauche);
+ ajouter(ligne_droite);
 
 
 
@@ -329,13 +355,14 @@ function init(){
 
 
 
-_____
  let menu_courbe = new function(){
   this.type_trajectoire_droite = 1;
   this.type_trajectoire_gauche = 2;
  }
 
  let courbe = gui.addFolder("Courbe");
+
+
 
 
 // _____________creatoin d'un sous-menu pour la trajectoire gauche______________
@@ -377,6 +404,8 @@ _____
     ajouter(bezier_droite);
 
   }
+
+ });
 
 
 

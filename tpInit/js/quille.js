@@ -82,7 +82,6 @@ function ligne_plane(x0, y0, x1, y1, echelle_div){
     points[k] = vecteur(x, y, z);
   }
   
-  console.log(points);
 
   return points;
 
