@@ -1,5 +1,3 @@
-//Just trying !!
-
 let pos = 'center';
 let btn_state = false;
 
