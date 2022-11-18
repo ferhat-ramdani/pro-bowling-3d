@@ -1,5 +1,6 @@
 let pos = 'center';
 let btn_state = false;
+let dimenstion_quilles = 5;
 
 function init(){
  var stats = initStats();
@@ -126,13 +127,22 @@ function init(){
 
 
 
+  //ajouter deux boules, orange et verte :
+  ajouter(creer_sphere_avec_courbe(23, 3.1, "#FAA22C")[0]);
+  ajouter(creer_sphere_avec_courbe(23, 3.1, "#2CFA48", "#2CFA48")[1]);
+  ajouter(creer_sphere_avec_courbe(23, -3.1, "#2CFA48")[0]);
+  ajouter(creer_sphere_avec_courbe(23, -3.1, "#FAA22C", "#FAA22C")[1]);
 
 
 
 
 
-  dis_quilles(0, -3, .5, 1, 5, "#00AA00")
-  dis_quilles(0, 3, .5, 1, 5, "#ff6000")
+
+
+
+// dessiner dis quilles à droite et dis à gauche
+  dis_quilles(0, -3, .5, 1, dimenstion_quilles, "#00AA00")
+  dis_quilles(0, 3, .5, 1, dimenstion_quilles, "#ff6000")
 
 
 
@@ -147,12 +157,13 @@ function init(){
 
 
 
-  // dessiner une ligne en x=1 de long = 5;
+  // préparer 4 lignes pour délimiter les vois de chaque mène de bowling
   let L1 = ajouter(ligne_aux(1, 30));
   let L2 = ajouter(ligne_aux(5.1, 30));
   let L3 = ajouter(ligne_aux(-1, 30));
   let L4 = ajouter(ligne_aux(-5.1, 30));
 
+//ajouter les 4 lignes à la scene
   ajouter(L1);
   ajouter(L2);
   ajouter(L3);
@@ -170,6 +181,7 @@ function init(){
 
   let pts_gauche = bezier(p1, p2, p3, p4, 36);
 
+  //preparer la courbe de bezier a gauche
   let bezier_gauche = cuisine_courbe(pts_gauche, "#1afc3f");
 
 
@@ -177,7 +189,6 @@ function init(){
   
   // preparer les points d'une courbe de bezier
   let translation = 6.1;
-
   let p1_ = vecteur(30, -3.05 + translation, 0);
   let p2_ = vecteur(20, 2 + translation, 0);
   let p3_ = vecteur(5, -8 + translation, 0);
@@ -185,20 +196,31 @@ function init(){
 
   let pts_droite = bezier(p1_, p2_, p3_, p4_, 36);
 
+  //preparer la courbe de bezier à droite
   let bezier_droite = cuisine_courbe(pts_droite, "#fa865c");
 
 
 
 
-  //preparer les points d'une ligne grise a gauche
-  let pts_ligne_gauche = ligne_plane(30, -4.1, -6, -2, 36)
+  //preparer les points d'une trajectoire rectiligne à gauche
+  let pts_ligne_gauche = ligne_plane(30, -4.1, -6, -2, 36);
+
+  //preparer la trajectoire rectiligne à gauche
   let ligne_gauche = cuisine_courbe(pts_ligne_gauche, "#1afc3f");
 
 
-  //preparer les points d'une ligne grise a droite
+  //preparer les points d'une trajectoire rectiligne à droite
   let pts_ligne_droite = ligne_plane(30, -4.1 + translation, -6, -2 + translation, 36);
+
+  //preparer la trajectoire rectiligne à droite
   let ligne_droite = cuisine_courbe(pts_ligne_droite, "#fa865c");
 
+
+
+
+   // dessiner une trajectoire rectiligne pour chaque équipe:
+ ajouter(bezier_gauche);
+ ajouter(bezier_droite);
 
 
   
@@ -212,26 +234,14 @@ function init(){
 
 
 
-  //this is just trying out !!
-  let sphereG = new THREE.SphereGeometry (0.5, 100, 60 );
-  let material = new THREE.MeshPhongMaterial({ 
-      color: "#0DAD87", 
-      opacity: 1,
-      transparent: true, 
-      wireframe: true,
-      emissive : {r:2, g:2, b:2},
-      specular : {r:0, g:255, b:255},
-      shininess : 45,
-  } );
-  let sphere = new THREE.Mesh( sphereG, material );
 
-  sphere.position.x = 20;
-  sphere.position.y = 5;
-  sphere.position.z = 0.5;
+  //demonstration d'une animation d'une boule suivant
+  //une liste de poits : (comment out the lines below : )
 
-  scene.add( sphere );
-
-  // console.log(sphere.position);
+// let mesh = creer_sphere_avec_courbe(0, 0, 0)[0];
+// ajouter(mesh);
+// let pts = [vecteur(0, 0, 0), vecteur(1, 0, 0), vecteur(2, 0, 0), vecteur(3, 0, 0), vecteur(4, 0, 0),vecteur(5, 0, 0), vecteur(6, 0, 0)];
+// bouger(mesh, pts_droite);
 
 
 
@@ -245,14 +255,13 @@ function init(){
   //********************************************************
 
 
-  // fonction qui supprime l'objet entré en paramètre :
-  function effacer(obj){
-    scene.remove(obj);
-  }
 
 
 
-
+//fonction qui efface un objet de la scene
+function effacer(obj){
+  scene.remove(obj);
+}
 
 
 
@@ -345,9 +354,7 @@ function init(){
 
 
 
- // dessiner une trajectoire rectiligne pour chaque équipe:
- ajouter(ligne_gauche);
- ajouter(ligne_droite);
+
 
 
 
@@ -356,7 +363,7 @@ function init(){
 
 
  let menu_courbe = new function(){
-  this.type_trajectoire_droite = 1;
+  this.type_trajectoire_droite = 2;
   this.type_trajectoire_gauche = 2;
  }
 

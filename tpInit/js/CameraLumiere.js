@@ -30,7 +30,7 @@
 
  function lumiere(scene){
     let lumPt = new THREE.PointLight(0xff55ff);
-    lumPt.position.set(3,3,-3);
+    lumPt.position.set(30,0,0);
     lumPt.intensity = 1;
     lumPt.shadow.camera.far=2000;
     lumPt.shadow.camera.near=0;
