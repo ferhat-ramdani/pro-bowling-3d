@@ -1,12 +1,12 @@
- var xDir=0;
+ var xDir=10;
  var yDir=0;
- var zDir=0.25;
+ var zDir=3.05;
   
  function cameraLumiere(scene,camera){   // creation de la camera 
-  camera.up = new THREE.Vector3( 0, 0, 1 );
-  let xPos=3;
-  let yPos=3;
-  let zPos=3;
+  camera.up = new THREE.Vector3( 0, 3.05, 0 );
+  let xPos=20;
+  let yPos=80;
+  let zPos=3.05;
   camera.position.set(xPos, yPos, zPos);
   camera.lookAt(xDir, yDir, zDir);
   camera.updateProjectionMatrix();
@@ -30,7 +30,7 @@
 
  function lumiere(scene){
     let lumPt = new THREE.PointLight(0xff55ff);
-    lumPt.position.set(30,0,0);
+    lumPt.position.set(3,3,-3);
     lumPt.intensity = 1;
     lumPt.shadow.camera.far=2000;
     lumPt.shadow.camera.near=0;

@@ -44,40 +44,36 @@ function vecteur(x, y, z){
 //        FONCTION FACE_ELEMENTAIRE
 
 // fonction qui prends 4 points et dessine un une face
-function face_elementaire(A, B, C, D, c){
+function face_elementaire(A, B, C, D, c){ 
 
   // creation de l'objet geometrique:
-  let quadrilateral_geometry = new THREE.Geometry();
+  let geometrie_quadrilaterale = new THREE.Geometry();
 
   // proprietes geometrique 
-  quadrilateral_geometry.vertices = [A, B, C, D];
-  quadrilateral_geometry.faces = [
+  geometrie_quadrilaterale.vertices = [A, B, C, D];
+  geometrie_quadrilaterale.faces = [
     new THREE.Face3(0, 1, 2), 
     new THREE.Face3(0, 2, 3)
   ];
 
   // creation de l'objet material
-  var basicMaterial = new THREE.MeshPhongMaterial({
-    color: "#999900", // couleur de l’objet
-    opacity: 1,
-    transparent: true,
-    emissive: c, //couleur emissive
-    specular:"#050505", //couleur speculaire
+  var material_quadrilateral = new THREE.MeshPhongMaterial({
+    color: c,
+    emissive: 0x2aa777,
+    specular: 0x050515,
     flatShading: true,
-    shininess:30,//brillance
+    // shininess:0,
     side: THREE.DoubleSide,
   });
 
 
   // creation de l'objet à retourner:
-  let quadrilateral = new THREE.Mesh(quadrilateral_geometry, basicMaterial);
+  let quadrilateral = new THREE.Mesh(geometrie_quadrilaterale, material_quadrilateral);
 
   // retourne l'objet
   return quadrilateral;
 
 }
-
-face_elementaire(vecteur(0, 0, 0), vecteur(0, 3, 0), vecteur(0, 3, 3), vecteur(0, 0, 3), "#FF0000");
 
 
 
@@ -193,7 +189,7 @@ function cuisiner_surf_rev(liste_contours, c){
 
 //        FONCTION cuisiner_QUILLE
 
-// fonction qui prends prends en paramètre une position (x, y) du plan Oxy
+// fonction qui prends en paramètre une position (x, y) du plan Oxy
 // et un pourcentage (entre 1 et 100), et dessine une quille à cette position
 // avec cette resolution
 function cuisiner_quille(x, y, resolution, couleur){
@@ -220,9 +216,10 @@ function cuisiner_quille(x, y, resolution, couleur){
   let p2 = vecteur(0, .35, .36);
   let p3 = vecteur(0, .4, .6);
   let p4 = vecteur(0, .2, 1);
+
   let pts_bez_1 = bezier(p1, p2, p3, p4, echelle_1);
   let pts_surf_1 = revolution(pts_bez_1, x, y, echelle_1_);
-  surfaces_scene = surfaces_scene.concat( cuisiner_surf_rev(pts_surf_1, "#AAAAAA") );
+  surfaces_scene = surfaces_scene.concat( cuisiner_surf_rev(pts_surf_1, 0xAAAAAA) );
 
   let p_1 = vecteur(0, .2, 1);
   let p_2 = vecteur(0, .17, 1.06);
@@ -233,17 +230,17 @@ function cuisiner_quille(x, y, resolution, couleur){
   surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_2, couleur));
 
 
-  let pts_ligne = ligne(.1, 1.2, 1.4, echelle_3);
+  let pts_ligne = ligne_Oxz(.1, 1.2, 1.4, echelle_3);
   let pts_surf_3 = revolution(pts_ligne, x, y, echelle_3_);
-  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_3, "#AAAAAA"));
+  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_3, 0xAAAAAA));
 
   let p__1 = vecteur(0, .1, 1.4);
-  let p__2 = vecteur(0, .1, 1.46);
+  let p__2 = vecteur(0, .1, 1.60);//vecteur(0, .1, 1.46)
   let p__3 = vecteur(0, .08, 1.5);
   let p__4 = vecteur(0, 0, 1.5);
   let pts_bez_3 = bezier(p__1, p__2, p__3, p__4, echelle_4);
   let pts_surf_4 = revolution(pts_bez_3, x, y, echelle_4_);
-  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_4, "#AAAAAA"));
+  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_4, 0xAAAAAA));
 
 
   return surfaces_scene;
@@ -257,5 +254,87 @@ function cuisiner_quille(x, y, resolution, couleur){
 
 
 
+
+
+
+
+  //        FONCTION DESSINER_QUILLE
+
+  // fonction qui dessine une quille à la position (x, y)
+  // et à la résolution 'resolution', elle sauvegarde 
+  // les quille dans une liste pour etre utilisé
+  // dans l'animation.
+
+function dessiner_quille(x, y, resolution, couleur){
+  let faces = cuisiner_quille(x, y, resolution, couleur);
+  for (let i = 0; i < faces.length; i++) {
+    for (let j = 0; j < faces[i].length - 1; j++) {
+      ajouter(faces[i][j]);
+    }
+  }
+}
+
+
+
+
+
+function dessiner_quille_bis(x, y, resolution, couleur){
+  let faces = cuisiner_quille(x, y, resolution, couleur);
+  const quille = new THREE.Group();
+  for (let i = 0; i < faces.length; i++) {
+    for (let j = 0; j < faces[i].length - 1; j++) {
+      quille.add(faces[i][j]);
+    }
+  }
+  ajouter(quille);
+  return quille;
+}
+
+
+
+
+
+
+
+
+
+
+  //        FONCTIN DIS_QUILLES
+
+  // fonction qui affiche 10 quilles bien alignés, ensuite
+  // stoque la carcasse de chaque quille dans une liste, et 
+  // rajoute cette liste (de 10 quilles) à la liste liste_dis_quille
+  // donc liste_dis_quille est une liste dont les élements est un lot de 
+  // dis quilles.
+
+  function dis_quilles(x0, y0, x_gap, y_gap, resolution, couleur){
+    let liste_quille_pos = [];
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < i + 1; j++) {
+        x = x0 - x_gap*i;
+        y =  y0 - (y_gap/2)*i + y_gap*j;
+        liste_quille_pos.push( { quille: dessiner_quille_bis(x, y, resolution, couleur) ,position : {posx: x, posy: y} } );
+      }
+    }
+
+    liste_dis_quilles.push(liste_quille_pos);
+
+
+    // supprimer();
+  }
+
+
+
+  
+
+
+  //test de suppression d'une quille.
+
+  // function supprimer(){
+  //   scene.remove(liste_dis_quilles[0][0].quille);
+  //   x = liste_dis_quilles[0][0].position.posx;
+  //   y = liste_dis_quilles[0][0].position.posy;
+  //   dessiner_parallelo(x, y, 0.1, "gauche");
+  // }
 
 

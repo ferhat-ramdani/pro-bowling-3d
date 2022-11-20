@@ -5,7 +5,7 @@
     <meta  charset="utf-8">
     <meta name="author" content="Lionel Garnier, Université de Bourgogne">
     <meta name="copyright" content="Lionel Garnier">
-    <title>Bowling</title>
+    <title>Citrouille d'Halloween</title>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/other/ThreeBSP.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/TrackballControls.js"></script>
@@ -14,20 +14,11 @@
     <script type="text/javascript" src="../../libs/util/util.js"></script>
     <script type="text/javascript" src="../js/CameraLumiere.js"></script>
     <script type="text/javascript" src="../js/init.js"></script>
-    <script src="../js/quille.js"></script>
-    <script src="../js/animation.js"></script>
-    <script src="../js/boule.js"></script>
-    <script src="../js/boule.js"></script>
-    <script src="../js/lignes_courbes.js"></script>
     <link rel="stylesheet" href="../css/init.css">
 </head>
 
 
 <body onload="init()">
-
-  <button id="gauche" onclick="change_pos('left')">gauche</button>
-  <button id="droite" onclick="change_pos('right')">droite</button>
-
     <div id="webgl"></div>
     <form id="controle" action="mailto:toto@wanadoo.fr" method="post">
       <fieldset>
@@ -57,63 +48,6 @@
       </fieldset>
     </form>
     <p id="result"></p>
-
-
-
-
-
-    <style>
-      #table{
-        border:1px solid black;
-        background-color: white;
-        text-align: center;
-      }
-      
-      #Equipe{
-        border:1px solid black;
-      }
-      
-      #Score{
-        border:1px solid black;
-      }
-      
-      #verte{
-        color: lime;
-        border:2px solid orange;
-      }
-      
-      #orange{
-        color: orange;
-        border:2px solid lime;
-      }
-      </style>
-
-
-
-
-    <!-- new table -->
-
-    <table style="width:30%" id="table">
-      <tr>
-        <th id="Equipe">Equipe</th>
-        <th id="Score">Score</th>
-      </tr>
-      <tr>
-        <td id="verte">Verte</td>
-        <td id="verte">0</td>
-      </tr>
-      <tr>
-        <td id="orange">Orange</td>
-        <td id="orange">0</td>
-      </tr>
-    </table>
-
-    <!-- end of new table -->
-
-
-
-
-
 </body>
 
 </html>
