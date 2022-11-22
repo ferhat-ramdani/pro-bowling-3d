@@ -29,6 +29,8 @@ function bouger(obj, points, equipe){
     y0 = obj.position.y;
     let pass = true;
 
+    let count = 0;
+
     // quilles = deep_copy(liste_dis_quilles[equipe-1]);
 
     let interval = setInterval(() => {
@@ -45,11 +47,39 @@ function bouger(obj, points, equipe){
 
             // console.log(posx, posy);
 
-            if(j>0){
+            if(j>0 && j< points.length-1){
                 //calculer l'angle de rotation : angle = R/arc
-                if(distance(points[j-1], points[j]) > 0){
-                    let rot_angle = distance(points[j-1], points[j]) / R;
-                    obj.rotateOnAxis(new THREE.Vector3(0,1,0), -rot_angle);
+
+                let d = distance(points[j-1], points[j]);
+                if(d > 0){
+                    let rot_angle = d / R;
+                    let vect_dir_1 = new THREE.Vector2(points[j].x - points[j-1].x, points[j].y - points[j-1].y);
+                    vect_dir_1.normalize();
+                    let vect_dir_2 = new THREE.Vector2(points[j+1].x - points[j].x, points[j+1].y - points[j].y);
+                    vect_dir_2.normalize();
+                    let O = new THREE.Vector2(0, 0);
+                    let rot_axis_2d = vect_dir_1.rotateAround(O, Math.PI/2);
+                    let rot_axis_3d = new THREE.Vector3(rot_axis_2d.x, rot_axis_2d.y, 0);
+                    let z_axis = new THREE.Vector3(0, 0, 1);
+
+                    let rot_z = vect_dir_2.angle() - vect_dir_1.angle();
+                    
+
+                    count++;
+                    // console.log(count);
+                    // console.log(vect_dir_1, vect_dir_2);
+                    // console.log(rot_z);
+
+
+                    // console.log(d, rot_angle, rot_z);
+                    // console.log(points[j-1], points[j])
+
+
+
+                    obj.rotateOnAxis(z_axis, rot_z);
+                    obj.rotateOnAxis(rot_axis_3d, - rot_angle);
+
+                    // obj.rotateOnAxis(new THREE.Vector3(0,1,0), - rot_angle);
                 }
 
 
@@ -72,7 +102,7 @@ function bouger(obj, points, equipe){
 
                             const pt = bordures[pts];
                             
-                            if(check_disque(pt[0], pt[1], quille.position.posx, quille.position.posy, 0.33)){
+                            if(check_disque(pt[0], pt[1], quille.position.posx, quille.position.posy, r_quille)){
                                 remplace_quille_para(equipe, quille, i, quilles);
                                 pass = false
                             }
@@ -90,6 +120,25 @@ function bouger(obj, points, equipe){
         } else {
             obj.position.x = x0;
             obj.position.y = y0;
+
+            if(equipe == 2 && type_traj_d == 'non rect' && quilles2.length > 0){
+                courbe_aleratoire_d = generer_courbe(equipe_2_c_bis);
+                pts_bezier_d = courbe_aleratoire_d[0];
+                traj_droite = pts_bezier_d;
+                effacer(bezier_d);
+                bezier_d = courbe_aleratoire_d[1];
+                ajouter(bezier_d);
+            } else if(equipe == 1 && type_traj_g == 'non rect' && quilles1.length > 0){
+                courbe_aleratoire_g = generer_courbe(equipe_1_c);
+                pts_bezier_g = courbe_aleratoire_g[0];
+                traj_gauche = pts_bezier_g;
+
+                effacer(bezier_g);
+                bezier_g = courbe_aleratoire_g[1];
+                translater_pts(pts_bezier_g, bezier_g, - 6.1);
+                ajouter(bezier_g);
+            }
+
             clearInterval(interval);
         }
     }, 100);
@@ -217,11 +266,11 @@ function remplace_quille_para(equipe, quille_obj, indice, tab_quilles){
 
 
     if(equipe == 1){
-        console.log("je suis la ", equipe);
+        // console.log("je suis la ", equipe);
         score_1++;
         document.getElementById("verte_score").innerHTML = score_1;
     } else if(equipe == 2){
-        console.log("je suis la ", equipe, quille_obj.x, quille_obj.y);
+        // console.log("je suis la ", equipe, quille_obj.x, quille_obj.y);
         score_2++;
         document.getElementById("orange_score").innerHTML = score_2;
     }
@@ -295,3 +344,43 @@ function deep_copy(list){
     return copied_list;
 }
 
+
+
+
+
+
+
+
+
+
+// fonction qui change la position de la camera
+// et la direction
+
+let old_state = false;
+setInterval(function(){
+  if(pos == 1 && old_state != btn_state){
+    camera.position.x = 10.5;
+    camera.position.y = -3.05;
+    camera.position.z = 50;
+    camera.lookAt(10.5, -3.05, 0);
+    camera.zoom = 1;
+    camera.updateProjectionMatrix();
+
+    bouger(boule_verte, traj_gauche, 1);
+
+    
+  } else if(pos == 2 && old_state != btn_state){
+    camera.position.x = 10.5;
+    camera.position.y = 3.05;
+    camera.position.z = 50;
+    camera.lookAt(10.5, 3.05, 0);
+    camera.zoom = 1;
+    camera.updateProjectionMatrix();
+
+
+    bouger(boule_orange, traj_droite, 2);
+  }
+
+  old_state = btn_state;
+
+}, 100);

@@ -27,8 +27,8 @@
 
 <body onload="init()">
 
-  <button id="gauche" onclick="change_pos('left')">gauche</button>
-  <button id="droite" onclick="change_pos('right')">droite</button>
+  <button id="gauche" onclick="change_pos(1)">Equipe 1</button>
+  <button id="droite" onclick="change_pos(2)">Equipe 2</button>
 
     <div id="webgl"></div>
     <form id="controle" action="mailto:toto@wanadoo.fr" method="post">
@@ -66,30 +66,36 @@
 
     <style>
       #table{
-        border:1px solid black;
-        background-color: white;
+        border:1px solid white;
+        background-color: none;
         text-align: center;
         position : fixed;
-        top : 10%;
-        left: 2%
+        top : 15px;
+        left: 90px;
+        opacity: 0.9;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 14px;
       }
       
       #Equipe{
-        border:1px solid black;
+        border:1px solid white;
+        color:white;
       }
       
       #Score{
-        border:1px solid black;
+        border:1px solid white;
+        color:white;
       }
       
       .verte{
-        color: lime;
-        border:2px solid orange;
+        color: rgb(61, 255, 61);
+        border:2px solid rgb(255, 197, 88);
       }
       
       .orange{
-        color: orange;
-        border:2px solid lime;
+        color: rgb(255, 197, 88);
+        border:2px solid rgb(61, 255, 61);
       }
       </style>
 
@@ -98,7 +104,7 @@
 
 <!-- new table -->
 
-<table style="width:10%" id="table">
+<table style="width:200px" id="table">
   <tr>
     <th id="Equipe">Equipe</th>
     <th id="Score">Score</th>

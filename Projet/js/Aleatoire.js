@@ -71,7 +71,7 @@ let j=0;
 
 
 //fonction qui génère 7 pts de controle
-function generer_pts_control(){
+function generer_ptscontrol(){
 
   //entre 1 + R et 5.1 - R
   p4_y = Math.random();
@@ -187,15 +187,81 @@ function dessiner_point(x, z){
 
 
 // retourne si la courbe est bonne ou à jeter
-function filtrer_courbe(pts){
+
+let dis_to_q_ok = false;
+
+function filtrer_courbe(pts, couleur){
+
+  let pos_ok = true;
+  let dis_to_q_ok = false;
   let ok = true;
   pts.forEach(pt => {
     if( pt.y <= 1 + R + eps || pt.y >= 5.1 - R - eps ){
-      ok = false;
+      pos_ok = false;
     }
   });
 
-  return ok;
+
+  if(pos_ok){
+
+    pts.forEach(pt => {
+      if (valider_cbe(pt, couleur)){
+        // console.log("je suis la", pt, couleur);
+        dis_to_q_ok = true;
+        // console.log("dis : ", dis_to_q_ok, " pos_ok", pos_ok);
+      }
+    });
+
+  }
+
+  // if(pos_ok){console.log(dis_to_q_ok)};
+
+  return (pos_ok && dis_to_q_ok);
+}
+
+
+
+
+
+
+
+
+
+
+//fonction qui determine si la courbe va faire tomber des quilles
+//ou pas
+function valider_cbe(pt, couleur){
+
+  let b = false;
+
+  if(couleur == equipe_2_c_bis){
+
+    
+    quilles2.forEach(quille => {
+      d = Math.sqrt( Math.pow(pt.x - quille.position.posx, 2) + Math.pow(pt.y - quille.position.posy, 2) );
+      // console.log(d, pt.x, pt.y);
+      if(d < R+r_quille - ep){
+        // console.log("ca rentre");
+        b = true;
+      }
+    });
+
+
+  } else if(couleur == equipe_1_c){
+
+    // console.log("equipe 1");
+
+    quilles1.forEach(quille => {
+      d = Math.sqrt( Math.pow(pt.x - quille.position.posx, 2) + Math.pow(pt.y - 6.1 - quille.position.posy, 2) );
+      if(d < R+r_quille - ep){
+        // console.log("i am equipe 2 and it is true");
+        b = true;
+      }
+    });
+
+  }
+
+  return b;
 }
 
 
@@ -208,9 +274,7 @@ function filtrer_courbe(pts){
 
 
 
-
-
-function bezier(p1, p2, p3, p4, echelle_div){
+function bezier_sp(p1, p2, p3, p4, echelle_div){
 
   let points = [];
 
@@ -227,7 +291,30 @@ function bezier(p1, p2, p3, p4, echelle_div){
     let y = b1 * p1.y + b2 * p2.y + b3 * p3.y + b4 * p4.y;
     let z = b1 * p1.z + b2 * p2.z + b3 * p3.z + b4 * p4.z;
 
-    points[i] = vecteur(x, y, z);
+    points.push(vecteur(x, y, z));
+    // console.log(x);
+    if(x < 1/2 && x > - 3){
+      for (let k = 1; k < 4; k++) {
+        
+        let t = ((i + k/4) / echelle_div);
+  
+        let b1 = Math.pow((1 - t), 3);
+        let b2 = 3 * t * Math.pow((1 - t), 2);
+        let b3 = 3 * Math.pow(t, 2) * (1 - t);
+        let b4 = Math.pow(t, 3);
+    
+        let x = b1 * p1.x + b2 * p2.x + b3 * p3.x + b4 * p4.x;
+        let y = b1 * p1.y + b2 * p2.y + b3 * p3.y + b4 * p4.y;
+        let z = b1 * p1.z + b2 * p2.z + b3 * p3.z + b4 * p4.z;
+        
+  
+        // console.log("yes!", vecteur(x, y, z));
+  
+        points.push(vecteur(x, y, z));
+        
+      }
+    }
+
     // console.log(x, y, z);
 
   }
@@ -258,6 +345,7 @@ function bezier(p1, p2, p3, p4, echelle_div){
 //elle cuisine une courbe a partir de pts
 function cuisine_courbe(points, couleur){
 
+  let bezier;
   let PtsTab = new THREE.BufferGeometry().setFromPoints(points);
   let ProprieteCbe = new THREE.LineBasicMaterial( {
   color: couleur,
@@ -288,19 +376,19 @@ function cuisine_courbe(points, couleur){
 // let pt7 = vecteur( p6X, p6Y, 0);
 // let pt8 = vecteur( p7X, p7Y, 0);
 
-// let pts_droite_1 = bezier(pt8, pt7, pt6, pt5, 50);
-// let pts_droite_2 = bezier(pt4, pt3, pt2, pt1, 50);
-// let pts_droite = pts_droite_1.concat(pts_droite_2);
-// let bezier_droite_1 = cuisine_courbe(pts_droite_1, 0xffffff);
-// let bezier_droite_2 = cuisine_courbe(pts_droite_2, 0xffffff);
-// let bezier_droite = new THREE.Group();
-// bezier_droite.add(bezier_droite_1, bezier_droite_2);
+// let pts1 = bezier(pt8, pt7, pt6, pt5, 50);
+// let pts2 = bezier(pt4, pt3, pt2, pt1, 50);
+// let pts = pts1.concat(pts2);
+// let bezier1 = cuisine_courbe(pts1, 0xffffff);
+// let bezier2 = cuisine_courbe(pts2, 0xffffff);
+// let bezier = new THREE.Group();
+// bezier.add(bezier1, bezier2);
 
 
 
 
 
-// scene.add(bezier_droite);
+// scene.add(bezier);
 
 
 
@@ -322,13 +410,14 @@ function cuisine_courbe(points, couleur){
 
 // fonction qui genere une courbe, vérifie si elle 
 // est bonne, si oui, la dessine.
-function generer_courbe(){
+function generer_courbe(couleur){
 
   let cont = true;
-  let pts_droite;
+  let pts;
+  let bezier_ = new THREE.Group();
 
   while(cont){
-    generer_pts_control();
+    generer_ptscontrol();
 
     let pt1 = vecteur( p1X, p1Y, 0);
     let pt2 = vecteur( p2X, p2Y, 0);
@@ -340,38 +429,95 @@ function generer_courbe(){
     let pt7 = vecteur( p6X, p6Y, 0);
     let pt8 = vecteur( p7X, p7Y, 0);
 
-    let pts_droite_1 = bezier(pt8, pt7, pt6, pt5, 15);
-    let pts_droite_2 = bezier(pt4, pt3, pt2, pt1, 15);
-    pts_droite = pts_droite_1.concat(pts_droite_2);
+    let pts1 = bezier_sp(pt8, pt7, pt6, pt5, traj_non_rect_resolution);
+    let pts2 = bezier_sp(pt4, pt3, pt2, pt1, traj_non_rect_resolution);
+    pts = pts1.concat(pts2);
 
-    if(filtrer_courbe(pts_droite)){
+    if(filtrer_courbe(pts, couleur)){
 
-
-    //   dessiner_point(p1X, p1Y);
-    //   dessiner_point(p2X, p2Y);
-    //   dessiner_point(p3X, p3Y);
-    //   dessiner_point(p4X, p4Y);
-    //   dessiner_point(p5X, p5Y);
-    //   dessiner_point(p6X, p6Y);
-    //   dessiner_point(p7X, p7Y);
-
-    //   scene.add(cuisine_courbe([pt3, pt6], 0xff1010));
-    //   scene.add(cuisine_courbe([pt1, pt2], 0xff1010));
-    //   scene.add(cuisine_courbe([pt8, pt7], 0xff1010));
-
-
-      let bezier_droite_1 = cuisine_courbe(pts_droite_1, 0x000000);
-      let bezier_droite_2 = cuisine_courbe(pts_droite_2, 0x000000);
-      let bezier_droite = new THREE.Group();
-      bezier_droite.add(bezier_droite_1, bezier_droite_2);
-      scene.add(bezier_droite);
+      let bezier1 = cuisine_courbe(pts1, couleur);
+      let bezier2 = cuisine_courbe(pts2, couleur);
+      bezier_.add(bezier1, bezier2);
+      bezier_.position.z = 0.01;
+      // scene.add(bezier);
       cont = false;
     }
 
   }
 
-  return pts_droite;
+  return [pts, bezier_];
 }
 
 
-traj_droite = generer_courbe();
+
+
+
+
+
+
+let courbe_aleratoire_d;
+let pts_bezier_d;
+let bezier_d;
+
+let courbe_aleratoire_g;
+let pts_bezier_g;
+let bezier_g;
+
+
+
+//fonction qui translate la composantes y de tout 
+//les points d'un tableau de pts, et fait la meme chose
+//un obj (mesh);
+function translater_pts(pts, mesh, trans){
+  // console.log(pts[pts.length - 1]);
+  pts.forEach(pt => {
+    pt.y = pt.y + trans;
+  });
+  mesh.position.y = trans;
+}
+
+
+
+
+
+
+// afin d'éviter certains problèmes
+setTimeout(() => {
+  
+  courbe_aleratoire_d = generer_courbe(equipe_2_c_bis);
+  pts_bezier_d = courbe_aleratoire_d[0];
+  bezier_d = courbe_aleratoire_d[1];
+
+  courbe_aleratoire_g = generer_courbe(equipe_1_c);
+  pts_bezier_g = courbe_aleratoire_g[0];
+  bezier_g = courbe_aleratoire_g[1];
+
+  
+  // bezier_g.position.y = 4;
+
+  // console.log("g",  bezier_g);
+  // console.log("d",  bezier_d);
+
+  // bezier_d.position.y = 100;
+  
+  
+  translater_pts(pts_bezier_g, bezier_g, - 6.1);
+
+
+  // bezier_g.position.y = bezier_g.position.y - 6.1;
+  
+  
+  
+  ajouter(bezier_d);
+  traj_droite = pts_bezier_d;
+  type_traj_d = 'non rect';
+  
+  // console.log("bezier_g", pts_bezier_g);
+  
+  
+  ajouter(bezier_g);
+  traj_gauche = pts_bezier_g;
+  type_traj_g = 'non rect';
+
+}, 3000);
+

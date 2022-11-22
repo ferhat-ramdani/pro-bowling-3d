@@ -1,3 +1,38 @@
+let scene = new THREE.Scene();   
+
+
+
+
+
+let nb = 0;
+while(nb < 10){
+  nb = parseInt(prompt("gimme a number"));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function init(){
@@ -5,7 +40,7 @@ function init(){
     // creation de rendu et de la taille
  let rendu = new THREE.WebGLRenderer({ antialias: true });
  rendu.shadowMap.enabled = true;
- let scene = new THREE.Scene();   
+
  let camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 100);
  rendu.shadowMap.enabled = true;
  rendu.setClearColor(new THREE.Color(0xFFFFFF));
@@ -87,89 +122,6 @@ let phi7;
 
 
 let j=0;
-
-//random pt de contact
-// while (j< 10){
-//   y = Math.random();
-//   pY = (4.1 - 2 * R) * y + 1 + R;
-  
-//   x = Math.random();
-//   pX = 18 * x + 1;
-
-
-//   console.log(pX, pY);
-//   j++;
-// }
-
-
-// p4_y = Math.random();
-// p4Y = (4.1 - 2 * R) * p4_y + 1 + R;
-
-// p4_x = Math.random();
-// p4X = 18 * p4_x + 1;
-
-// phi_4 = Math.random();
-// phi4 = (pi/2) * phi_4 - pi/4;
-
-
-// p3_x = Math.random();
-// p3X = (p4X - 1/2) * p3_x;
-
-// p5_x = Math.random();
-// p5X = (20 - p4X + 1/2) * p5_x + p4X - 1/2;
-
-
-// let a4 = Math.tan(phi4);
-// let b4 = p4Y - a4 * p4X;
-
-// p3Y = a4*p3X + b4;
-// p5Y = a4*p5X + b4;
-
-
-
-// p1X = -3;
-// // pour la valeur du y du point initiale
-// p1_y = Math.random();
-// p1Y = (4.1 - 2 * R) * p1_y + 1 + R;
-
-
-
-// p7X = 23;
-// p7Y = 3.1;
-
-
-// phi_1 = Math.random();
-// phi1 = (pi/2) * phi_1 - pi/4;
-
-// p2_x = Math.random();
-// p2X = (p4X + 2) - 5/2;
-
-// let a1 = Math.tan(phi1);
-// let b1 = p1Y - a1 * p1X;
-
-// p2Y = a1*p2X + b1;
-
-
-
-
-// phi_7 = Math.random();
-// phi7 = (pi/2) * phi_7 - pi/4;
-
-// p6_x = Math.random();
-// p6X = (45/2 - p4X - 1/2) * p6_x + (p4X + 1/2);
-
-// let a7 = Math.tan(phi7);
-// let b7 = p7Y - a7 * p7X;
-
-// p6Y = a7*p6X + b7;
-
-
-
-
-
-
-
-
 
 
 
@@ -379,32 +331,6 @@ function cuisine_courbe(points, couleur){
 
 
 
-
-
-// dessiner_point(p1X, p1Y);
-// dessiner_point(p2X, p2Y);
-// dessiner_point(p3X, p3Y);
-// dessiner_point(p4X, p4Y);
-// dessiner_point(p5X, p5Y);
-// dessiner_point(p6X, p6Y);
-// dessiner_point(p7X, p7Y);
-
-
-
-
-
-// console.log(Math.floor(p1X), Math.floor(p1Y));
-// console.log(Math.floor(p2X), Math.floor(p2Y));
-// console.log(Math.floor(p3X), Math.floor(p3Y));
-// console.log(Math.floor(p4X), Math.floor(p4Y));
-// console.log(Math.floor(p5X), Math.floor(p5Y));
-// console.log(Math.floor(p6X), Math.floor(p6Y));
-// console.log(Math.floor(p7X), Math.floor(p7Y));
-
-
-
-
-
 let pt1 = vecteur( p1X, 0, p1Y);
 let pt2 = vecteur( p2X, 0, p2Y);
 let pt3 = vecteur( p3X, 0, p3Y);
@@ -505,6 +431,43 @@ function generer_courbe(){
 
 
 generer_courbe();
+
+
+
+
+
+
+
+
+
+
+function test(){
+
+  if(4==4){
+    return true;
+  }
+
+  return false;
+
+}
+
+console.log("test result : ", test());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
  //********************************************************

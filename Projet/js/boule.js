@@ -94,7 +94,7 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_tennis){
   boule.position.z = R;
 
   // return [sphere, courbe_tennis];
-  console.log(boule);
+  // console.log(boule);
   return boule;
 
 }

@@ -319,22 +319,4 @@ function dessiner_quille_bis(x, y, resolution, couleur){
 
     liste_dis_quilles.push(liste_quille_pos);
 
-
-    // supprimer();
   }
-
-
-
-  
-
-
-  //test de suppression d'une quille.
-
-  // function supprimer(){
-  //   scene.remove(liste_dis_quilles[0][0].quille);
-  //   x = liste_dis_quilles[0][0].position.posx;
-  //   y = liste_dis_quilles[0][0].position.posy;
-  //   dessiner_parallelo(x, y, 0.1, "gauche");
-  // }
-
-

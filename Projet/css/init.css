@@ -60,16 +60,22 @@ fieldset{
     top: 10%;
     right: 40%;
     padding: 20px;
-    background-color: black;
-    color: white;
+    background-color: rgb(255, 197, 88);
+    color: black;
     border: none;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 17px;
 }
 #gauche{
     position: absolute;
     top: 10%;
     left: 30%;
     padding: 20px;
-    background-color: black;
-    color: white;
+    background-color: rgb(61, 255, 61);
+    color: black;
     border: none;
+   font-family: Georgia, serif;
+   font-weight: bold;
+   font-size: 17px;
 }
