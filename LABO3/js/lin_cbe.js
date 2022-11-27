@@ -149,6 +149,7 @@ function ligne_aux(y0, long){
 function bezier(p1, p2, p3, p4, echelle_div){
 
     let points = [];
+    points[0] = p1;
   
     for (let i = 0; i <= echelle_div; i++) {
   
@@ -166,7 +167,8 @@ function bezier(p1, p2, p3, p4, echelle_div){
       points[i] = vecteur(x, y, z);
   
     }
-  
+    points.push(p4);
+
     return points;
   
 }
@@ -289,6 +291,8 @@ function dessiner_traj_rect(equipe){
     
           let x_ = 26 - 26*((i + k/4)/traj_rect_resolution)-3;
           let y_ = a*x_ + b;
+
+          // console.log(vecteur(x_, y_, ep));
     
           pts_lin_g.push(vecteur(x_, y_, ep));
           
@@ -299,7 +303,6 @@ function dessiner_traj_rect(equipe){
 
 
   } else if(equipe == 2){
-    pts_lin_d=[];
     effacer(lin_d);
 
     let pt2_y_d= (4.1-2*R-2*ep) * inclinaison_ratio_d + 1.1 + R + ep;
@@ -317,18 +320,9 @@ function dessiner_traj_rect(equipe){
       
       let x = 26 - 26*(i/traj_rect_resolution)-3;
       let y = a*x + b;
-      pts_lin_d.push(vecteur(x, y, ep));
 
-      if(x < 1/2 && x > - 3){
-        for (let k = 1; k < 4; k++) {
-    
-          let x_ = 26 - 26*((i + k/4)/traj_rect_resolution)-3;
-          let y_ = a*x_ + b;
-    
-          pts_lin_d.push(vecteur(x_, y_, ep));
-          
-        }
-      }
+      pts_lin_d[i] = vecteur(x, y, ep);
+
     }
   }
 
@@ -390,59 +384,4 @@ function face_elementaire_sp(A, B, C, D, c, sp, shin,){
   // retourne l'objet
   return quadrilateral;
 
-}
-
-
-
-
-
-
-
-
-//fonction qui prépare des parallélepipèdes en position (x,y) 
-//et du coté a
-function parallelo(x, y, a, equipe){
-  let f_bas;let f_haut;let f_derier;let f_devant;let f_gauche;let f_droite;
-  if(equipe == "gauche"){
-      f_bas = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x-a/2, y+a/2, 0), vecteur(x+a/2, y+a/2, 0), vecteur(x+a/2, y-a/2, 0), 0xffffff);
-      f_haut = face_elementaire(vecteur(x-a/2, y-a/2, a), vecteur(x-a/2, y+a/2, a), vecteur(x+a/2, y+a/2, a), vecteur(x+a/2, y-a/2, a), 0xffffff);
-      f_derier = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x-a/2, y+a/2, 0), vecteur(x-a/2, y+a/2, a), vecteur(x-a/2, y-a/2, a), 0xffffff);
-      f_devant = face_elementaire(vecteur(a + x-a/2, y-a/2, 0), vecteur(a + x-a/2, y+a/2, 0), vecteur(a + x-a/2, y+a/2, a), vecteur(a + x-a/2, y-a/2, a), 0xffffff);
-      f_gauche = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x+a/2, y-a/2, 0), vecteur(x+a/2, y-a/2, a), vecteur(x-a/2, y-a/2, a), 0xffffff);
-      f_droite = face_elementaire(vecteur(x-a/2, y-a/2+ a, 0), vecteur(x+a/2, y-a/2+ a, 0), vecteur(x+a/2, y-a/2 + a, a), vecteur(x-a/2, y-a/2 + a, a), 0xffffff);
-  }
-  
-  return [f_bas, f_haut, f_derier, f_devant, f_gauche, f_droite] ;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function dessiner_parallelo(x, y, a, equipe){
-  ajouter(parallelo(x, y, a, equipe)[0]);
-  ajouter(parallelo(x, y, a, equipe)[1]);
-  ajouter(parallelo(x, y, a, equipe)[2]);
-  ajouter(parallelo(x, y, a, equipe)[3]);
-  ajouter(parallelo(x, y, a, equipe)[4]);
-  ajouter(parallelo(x, y, a, equipe)[5]);
 }

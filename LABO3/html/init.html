@@ -5,7 +5,7 @@
     <meta  charset="utf-8">
     <meta name="author" content="Lionel Garnier, Université de Bourgogne">
     <meta name="copyright" content="Lionel Garnier">
-    <title>Bowling</title>
+    <title>Citrouille d'Halloween</title>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/other/ThreeBSP.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/TrackballControls.js"></script>
@@ -14,27 +14,14 @@
     <script type="text/javascript" src="../../libs/util/util.js"></script>
     <script type="text/javascript" src="../js/CameraLumiere.js"></script>
     <script type="text/javascript" src="../js/init.js"></script>
-    <script src="../js/quille.js"></script>
-    <script src="../js/animation.js"></script>
-    <script src="../js/boule.js"></script>
-    <script src="../js/draft.js"></script>
-    <script src="../js/Score.js"></script>
-    <script src="../js/Aleatoire.js"></script>
-    <script src="../js/lignes_courbes.js"></script>
+    <script type="text/javascript" src="../js/test.js"></script>
+    <script type="text/javascript" src="../js/lin_cbe.js"></script>
     <link rel="stylesheet" href="../css/init.css">
 </head>
 
 
 <body onload="init()">
-
-  <button id="gauche" onclick="change_pos(1)">Equipe 1</button>
-  <button id="droite" onclick="change_pos(2)">Equipe 2</button>
-  <button class="cam" id="cam1" onclick="camera_n(1)">Caméra 1</button>
-  <button class="cam" id="cam2" onclick="camera_n(2)">Caméra 2</button>
-  <button class="cam" id="cam3" onclick="camera_n(3)">Caméra 3</button>
-  <button class="cam" id="cam4" onclick="camera_n(4)">Caméra 4</button>
-
-  <div id="webgl"></div>
+    <div id="webgl"></div>
     <form id="controle" action="mailto:toto@wanadoo.fr" method="post">
       <fieldset>
         <legend>Contrôle de la camara et affichage du repère</legend>
@@ -63,72 +50,6 @@
       </fieldset>
     </form>
     <p id="result"></p>
-  </div>
-
-
-
-
-<style>
-  #table{
-    border:1px solid white;
-    background-color: none;
-    text-align: center;
-    position : fixed;
-    top : 15px;
-    left: 90px;
-    opacity: 0.9;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    font-size: 14px;
-  }
-  
-  #Equipe{
-    border:1px solid white;
-    color:white;
-  }
-  
-  #Score{
-    border:1px solid white;
-    color:white;
-  }
-  
-  .verte{
-    color: #40d200;
-    border:2px solid rgb(255, 197, 88);
-  }
-  
-  .orange{
-    color: rgb(255, 197, 88);
-    border:2px solid #40d200;
-  }
-</style>
-
-
-
-
-<!-- new table -->
-
-<table style="width:200px" id="table">
-  <tr>
-    <th id="Equipe">Equipe</th>
-    <th id="Score">Score</th>
-  </tr>
-  <tr>
-    <td class="verte">Verte</td>
-    <td class="verte" id="verte_score">0</td>
-  </tr>
-  <tr>
-    <td class="orange">Orange</td>
-    <td class="orange" id="orange_score">0</td>
-  </tr>
-</table>
-
-<!-- end of new table -->
-
-
-
-
-
 </body>
 
 </html>

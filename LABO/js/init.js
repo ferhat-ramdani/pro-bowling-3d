@@ -4,10 +4,10 @@ let scene = new THREE.Scene();
 
 
 
-let nb = 0;
-while(nb < 10){
-  nb = parseInt(prompt("gimme a number"));
-}
+// let nb = 0;
+// while(nb < 10){
+//   nb = parseInt(prompt("gimme a number"));
+// }
 
 
 

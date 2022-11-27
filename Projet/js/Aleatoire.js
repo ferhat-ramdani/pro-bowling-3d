@@ -7,7 +7,6 @@
 
 let pi = Math.PI;
 let eps = 0.05
-// let R =  0.55;
 
 let p1_x;
 let p1_y;
@@ -164,6 +163,14 @@ function vecteur(x, y, z){
 
 
 
+
+
+
+
+
+
+
+
 // dessiner un pt à (x, z)
 function dessiner_point(x, z){
   let sphereG = new THREE.SphereGeometry (0.10, 10, 10 );
@@ -186,10 +193,17 @@ function dessiner_point(x, z){
 
 
 
+
+
+
+
+
+
+
+
+
 // retourne si la courbe est bonne ou à jeter
-
 let dis_to_q_ok = false;
-
 function filtrer_courbe(pts, couleur){
 
   let pos_ok = true;
@@ -206,15 +220,11 @@ function filtrer_courbe(pts, couleur){
 
     pts.forEach(pt => {
       if (valider_cbe(pt, couleur)){
-        // console.log("je suis la", pt, couleur);
         dis_to_q_ok = true;
-        // console.log("dis : ", dis_to_q_ok, " pos_ok", pos_ok);
       }
     });
 
   }
-
-  // if(pos_ok){console.log(dis_to_q_ok)};
 
   return (pos_ok && dis_to_q_ok);
 }
@@ -239,9 +249,7 @@ function valider_cbe(pt, couleur){
     
     quilles2.forEach(quille => {
       d = Math.sqrt( Math.pow(pt.x - quille.position.posx, 2) + Math.pow(pt.y - quille.position.posy, 2) );
-      // console.log(d, pt.x, pt.y);
       if(d < R+r_quille - ep){
-        // console.log("ca rentre");
         b = true;
       }
     });
@@ -249,12 +257,9 @@ function valider_cbe(pt, couleur){
 
   } else if(couleur == equipe_1_c){
 
-    // console.log("equipe 1");
-
     quilles1.forEach(quille => {
       d = Math.sqrt( Math.pow(pt.x - quille.position.posx, 2) + Math.pow(pt.y - 6.1 - quille.position.posy, 2) );
       if(d < R+r_quille - ep){
-        // console.log("i am equipe 2 and it is true");
         b = true;
       }
     });
@@ -292,7 +297,6 @@ function bezier_sp(p1, p2, p3, p4, echelle_div){
     let z = b1 * p1.z + b2 * p2.z + b3 * p3.z + b4 * p4.z;
 
     points.push(vecteur(x, y, z));
-    // console.log(x);
     if(x < 1/2 && x > - 3){
       for (let k = 1; k < 4; k++) {
         
@@ -306,16 +310,11 @@ function bezier_sp(p1, p2, p3, p4, echelle_div){
         let x = b1 * p1.x + b2 * p2.x + b3 * p3.x + b4 * p4.x;
         let y = b1 * p1.y + b2 * p2.y + b3 * p3.y + b4 * p4.y;
         let z = b1 * p1.z + b2 * p2.z + b3 * p3.z + b4 * p4.z;
-        
-  
-        // console.log("yes!", vecteur(x, y, z));
   
         points.push(vecteur(x, y, z));
         
       }
     }
-
-    // console.log(x, y, z);
 
   }
 
@@ -366,44 +365,6 @@ function cuisine_courbe(points, couleur){
 
 
 
-// let pt1 = vecteur( p1X, p1Y, 0);
-// let pt2 = vecteur( p2X, p2Y, 0);
-// let pt3 = vecteur( p3X, p3Y, 0);
-// let pt4 = vecteur( p4X, p4Y, 0);
-
-// let pt5 = vecteur( p4X, p4Y, 0);
-// let pt6 = vecteur( p5X, p5Y, 0);
-// let pt7 = vecteur( p6X, p6Y, 0);
-// let pt8 = vecteur( p7X, p7Y, 0);
-
-// let pts1 = bezier(pt8, pt7, pt6, pt5, 50);
-// let pts2 = bezier(pt4, pt3, pt2, pt1, 50);
-// let pts = pts1.concat(pts2);
-// let bezier1 = cuisine_courbe(pts1, 0xffffff);
-// let bezier2 = cuisine_courbe(pts2, 0xffffff);
-// let bezier = new THREE.Group();
-// bezier.add(bezier1, bezier2);
-
-
-
-
-
-// scene.add(bezier);
-
-
-
-// let bor1 = cuisine_courbe([vecteur(-6, 1, 0), vecteur(23, 1)], 0xaa0909);
-// let bor2 = cuisine_courbe([vecteur(-6, 5.1, 0), vecteur(23, 5.1)], 0xaa0909);
-// scene.add(bor1);
-// scene.add(bor2);
-
-
-
-
-
-
-
-
 
 
 
@@ -439,7 +400,6 @@ function generer_courbe(couleur){
       let bezier2 = cuisine_courbe(pts2, couleur);
       bezier_.add(bezier1, bezier2);
       bezier_.position.z = 0.01;
-      // scene.add(bezier);
       cont = false;
     }
 
@@ -469,7 +429,6 @@ let bezier_g;
 //les points d'un tableau de pts, et fait la meme chose
 //un obj (mesh);
 function translater_pts(pts, mesh, trans){
-  // console.log(pts[pts.length - 1]);
   pts.forEach(pt => {
     pt.y = pt.y + trans;
   });
@@ -490,31 +449,13 @@ setTimeout(() => {
 
   courbe_aleratoire_g = generer_courbe(equipe_1_c);
   pts_bezier_g = courbe_aleratoire_g[0];
-  bezier_g = courbe_aleratoire_g[1];
-
-  
-  // bezier_g.position.y = 4;
-
-  // console.log("g",  bezier_g);
-  // console.log("d",  bezier_d);
-
-  // bezier_d.position.y = 100;
-  
-  
+  bezier_g = courbe_aleratoire_g[1];  
   translater_pts(pts_bezier_g, bezier_g, - 6.1);
-
-
-  // bezier_g.position.y = bezier_g.position.y - 6.1;
-  
-  
   
   ajouter(bezier_d);
   traj_droite = pts_bezier_d;
   type_traj_d = 'non rect';
-  
-  // console.log("bezier_g", pts_bezier_g);
-  
-  
+
   ajouter(bezier_g);
   traj_gauche = pts_bezier_g;
   type_traj_g = 'non rect';

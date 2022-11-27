@@ -19,7 +19,9 @@ function vecteur(x, y, z){
 
 
 
-
+function ajouter(obj){
+    scene.add(obj)
+}
 
 
 
@@ -76,7 +78,7 @@ function face_elementaire(A, B, C, D, c){
 
 }
 
-
+// ajouter(face_elementaire(vecteur(0.1,0,0), vecteur(0.1,0.1,0), vecteur(0,0.1,0), vecteur(0,0,0), ))
 
 
 
@@ -213,6 +215,7 @@ function cuisiner_quille(x, y, resolution, couleur){
   let echelle_4 = parseInt((resolution / 100) * 90);
   let echelle_4_ = parseInt((resolution / 100) * (250));
 
+  //courbe1
   let p1 = vecteur(0, .2, 0);
   let p2 = vecteur(0, .35, .36);
   let p3 = vecteur(0, .4, .6);
@@ -220,8 +223,10 @@ function cuisiner_quille(x, y, resolution, couleur){
 
   let pts_bez_1 = bezier(p1, p2, p3, p4, echelle_1);
   let pts_surf_1 = revolution(pts_bez_1, x, y, echelle_1_);
-  surfaces_scene = surfaces_scene.concat( cuisiner_surf_rev(pts_surf_1, quille_col) );
+  surfaces_scene = surfaces_scene.concat( cuisiner_surf_rev(pts_surf_1, couleur) );
 
+
+  //courbe2
   let p_1 = vecteur(0, .2, 1);
   let p_2 = vecteur(0, .17, 1.06);
   let p_3 = vecteur(0, .1, 1.1);
@@ -231,17 +236,19 @@ function cuisiner_quille(x, y, resolution, couleur){
   surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_2, couleur));
 
 
+  //cou -- ligne droite
   let pts_ligne = ligne_Oxz(.1, 1.2, 1.3, echelle_3);
   let pts_surf_3 = revolution(pts_ligne, x, y, echelle_3_);
-  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_3, quille_col));
+  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_3, couleur));
 
+  //courbe3
   let p__1 = vecteur(0, .1, 1.3);
   let p__2 = vecteur(0, .1, 1.60);//vecteur(0, .1, 1.46)
-  let p__3 = vecteur(0, .01, 1.5);
-  let p__4 = vecteur(0, 0, 1.5);
+  let p__3 = vecteur(0, 0.01, 1.50);
+  let p__4 = vecteur(0, 0, 1.55);
   let pts_bez_3 = bezier(p__1, p__2, p__3, p__4, echelle_4);
   let pts_surf_4 = revolution(pts_bez_3, x, y, echelle_4_);
-  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_4, quille_col));
+  surfaces_scene = surfaces_scene.concat(cuisiner_surf_rev(pts_surf_4, couleur));
 
 
   return surfaces_scene;

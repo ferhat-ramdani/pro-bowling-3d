@@ -1,10 +1,8 @@
 
-// setTimeout(() => {
-//     console.log("liste : ", liste_dis_quilles[1]);
-// }, 1000);
-
 let quilles1;
 let quilles2;
+let cont_lancer_g = 0;
+let cont_lancer_d = 0;
 
 setTimeout(() => {
     quilles1 = deep_copy(liste_dis_quilles[0]);
@@ -12,14 +10,16 @@ setTimeout(() => {
 }, 1000);
 
 //fonction qui prends une liste de points (vecteurs) et 
-//bouge un objet (mesh) suivant ces points.
+//bouge un objet (mesh) suivant ces points.s
 //equipe vaut soit 1 (pour l'équipe gauche) soit
 // 2 pour l'équipe droite.
 function bouger(obj, points, equipe){
     let quilles;
     if(equipe == 1){
+        cont_lancer_g++;
         quilles = quilles1;
     }else {
+        cont_lancer_d++;
         quilles = quilles2;
     }
 
@@ -30,12 +30,10 @@ function bouger(obj, points, equipe){
     let pass = true;
 
     let count = 0;
-
-    // quilles = deep_copy(liste_dis_quilles[equipe-1]);
+    
 
     let interval = setInterval(() => {
-
-        // console.log(obj.position);
+        
 
         if(j < points.length){
 
@@ -45,10 +43,7 @@ function bouger(obj, points, equipe){
             obj.position.x = posx;
             obj.position.y = posy;
 
-            // console.log(posx, posy);
-
             if(j>0 && j< points.length-1){
-                //calculer l'angle de rotation : angle = R/arc
 
                 let d = distance(points[j-1], points[j]);
                 if(d > 0){
@@ -62,24 +57,11 @@ function bouger(obj, points, equipe){
                     let rot_axis_3d = new THREE.Vector3(rot_axis_2d.x, rot_axis_2d.y, 0);
                     let z_axis = new THREE.Vector3(0, 0, 1);
 
-                    let rot_z = vect_dir_2.angle() - vect_dir_1.angle();
-                    
-
+                    let rot_z = vect_dir_2.angle() - vect_dir_1.angle();             
                     count++;
-                    // console.log(count);
-                    // console.log(vect_dir_1, vect_dir_2);
-                    // console.log(rot_z);
-
-
-                    // console.log(d, rot_angle, rot_z);
-                    // console.log(points[j-1], points[j])
-
-
 
                     obj.rotateOnAxis(z_axis, rot_z);
                     obj.rotateOnAxis(rot_axis_3d, - rot_angle);
-
-                    // obj.rotateOnAxis(new THREE.Vector3(0,1,0), - rot_angle);
                 }
 
 
@@ -97,7 +79,7 @@ function bouger(obj, points, equipe){
                     for (let pts = 0; pts < bordures.length; pts++) {
 
                         
-                        //si la quille courante n'est pas déja reduite en parallélopidpède
+                        //si la quille courante n'est pas déja reduite en parallélepidpède
                         if(pass){
 
                             const pt = bordures[pts];
@@ -165,32 +147,6 @@ function distance(p1, p2){
 
 
 
-//fonction qui prépare des parallélopipèdes en position (x,y) 
-//et du coté a
-function parallelo(x, y, a, equipe){
-    let f_bas;let f_haut;let f_derier;let f_devant;let f_gauche;let f_droite;
-    if(equipe == "gauche"){
-        f_bas = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x-a/2, y+a/2, 0), vecteur(x+a/2, y+a/2, 0), vecteur(x+a/2, y-a/2, 0), 0xffffff);
-        f_haut = face_elementaire(vecteur(x-a/2, y-a/2, a), vecteur(x-a/2, y+a/2, a), vecteur(x+a/2, y+a/2, a), vecteur(x+a/2, y-a/2, a), 0xffffff);
-        f_derier = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x-a/2, y+a/2, 0), vecteur(x-a/2, y+a/2, a), vecteur(x-a/2, y-a/2, a), 0xffffff);
-        f_devant = face_elementaire(vecteur(a + x-a/2, y-a/2, 0), vecteur(a + x-a/2, y+a/2, 0), vecteur(a + x-a/2, y+a/2, a), vecteur(a + x-a/2, y-a/2, a), 0xffffff);
-        f_gauche = face_elementaire(vecteur(x-a/2, y-a/2, 0), vecteur(x+a/2, y-a/2, 0), vecteur(x+a/2, y-a/2, a), vecteur(x-a/2, y-a/2, a), 0xffffff);
-        f_droite = face_elementaire(vecteur(x-a/2, y-a/2+ a, 0), vecteur(x+a/2, y-a/2+ a, 0), vecteur(x+a/2, y-a/2 + a, a), vecteur(x-a/2, y-a/2 + a, a), 0xffffff);
-    }
-    
-    return [f_bas, f_haut, f_derier, f_devant, f_gauche, f_droite] ;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 //fonction qui calcule et retourne une liste de pts
@@ -228,8 +184,6 @@ function check_disque(x, y, x0, y0, R){
 
     if(dist_R <= R){
 
-        // console.log("centre : (" + x0 + ", " + y0 + ")");
-
         return true;
     } else {
         return false;
@@ -255,7 +209,7 @@ function check_disque(x, y, x0, y0, R){
 //fonction qui prends l'equipe à laquelle appartient 
 //une quille ainsi que son indice dans la liste : liste_dis_quille[equipe - 1],
 // supprime la quille en question de la scene, la remplace par
-// un parallélopipède de coté 0.01
+// un parallélepipède de coté 0.01
 function remplace_quille_para(equipe, quille_obj, indice, tab_quilles){
 
     scene.remove(quille_obj.quille);
@@ -266,12 +220,22 @@ function remplace_quille_para(equipe, quille_obj, indice, tab_quilles){
 
 
     if(equipe == 1){
-        // console.log("je suis la ", equipe);
-        score_1++;
+        if( cont_lancer_g == 1 && tab_quilles.length == 0 ){
+            score_1 = 30;
+        } else if ( cont_lancer_g == 2 && tab_quilles == 0){
+            score_1 = 15;
+        } else {
+            score_1++;
+        }
         document.getElementById("verte_score").innerHTML = score_1;
     } else if(equipe == 2){
-        // console.log("je suis la ", equipe, quille_obj.x, quille_obj.y);
-        score_2++;
+        if( cont_lancer_d == 1 && tab_quilles.length == 0 ){
+            score_2 = 30;
+        } else if ( cont_lancer_d == 2 && tab_quilles == 0){
+            score_2 = 15;
+        } else {
+            score_2++;
+        }
         document.getElementById("orange_score").innerHTML = score_2;
     }
 
@@ -290,20 +254,6 @@ function remplace_quille_para(equipe, quille_obj, indice, tab_quilles){
 
 
 
-
-
-
-
-
-
-function dessiner_parallelo(x, y, a, equipe){
-    ajouter(parallelo(x, y, a, equipe)[0]);
-    ajouter(parallelo(x, y, a, equipe)[1]);
-    ajouter(parallelo(x, y, a, equipe)[2]);
-    ajouter(parallelo(x, y, a, equipe)[3]);
-    ajouter(parallelo(x, y, a, equipe)[4]);
-    ajouter(parallelo(x, y, a, equipe)[5]);
-}
 
 
 
@@ -355,32 +305,26 @@ function deep_copy(list){
 
 // fonction qui change la position de la camera
 // et la direction
-
 let old_state = false;
 setInterval(function(){
   if(pos == 1 && old_state != btn_state){
-    camera.position.x = 10.5;
     camera.position.y = -3.05;
-    camera.position.z = 50;
-    camera.lookAt(10.5, -3.05, 0);
-    camera.zoom = 1;
-    camera.updateProjectionMatrix();
-
     bouger(boule_verte, traj_gauche, 1);
-
-    
   } else if(pos == 2 && old_state != btn_state){
-    camera.position.x = 10.5;
     camera.position.y = 3.05;
-    camera.position.z = 50;
-    camera.lookAt(10.5, 3.05, 0);
-    camera.zoom = 1;
-    camera.updateProjectionMatrix();
-
-
     bouger(boule_orange, traj_droite, 2);
   }
 
   old_state = btn_state;
 
 }, 100);
+
+
+
+//fonction qui change btn_state lors d'un lancer
+function change_pos(pos_input){
+
+    pos = pos_input;
+    btn_state = !btn_state;
+
+}

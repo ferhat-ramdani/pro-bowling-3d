@@ -2,12 +2,11 @@
 //gauche = orange = equipe 1
 
 
-
-
+//    DECLARATIONS
 let camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
 let pos = 'center';
 let btn_state = false;
-let dimenstion_quilles = 4;
+let dimenstion_quilles = 5;
 let liste_dis_quilles = [];
 let scene = new THREE.Scene(); 
 let traj_gauche;
@@ -16,9 +15,9 @@ let score_1 = 0;
 let score_2 = 0;
 let type_traj_d;
 let type_traj_g;
-let equipe_1_c = 0x2CFA48;
-let equipe_2_c = 0xFF2121;
-let equipe_2_c_bis = 0xff7777;
+let equipe_1_c = 0x40d200;
+let equipe_2_c = 0xff8800;
+let equipe_2_c_bis = 0xff8800;
 let r_quille = 0.4;
 let inclinaison_ratio_g = 1/2;
 let inclinaison_ratio_d = 1/2;
@@ -28,32 +27,29 @@ let pts_lin_g = [];
 let pts_lin_d = [];
 let traj_rect_resolution = 9;
 let traj_non_rect_resolution = 9;
+let quille_col = 0xeaeaea;
+let mene_g = 0;
+let mene_d = 0;
+let n_lancers_g = 0;
+let n_lancers_d = 0;
+
+
 
 //demander à l'utilisateur de faire entrer
 //une resolution pour les quilles et les courbes/droites:
-while(dimenstion_quilles < 5 || dimenstion_quilles > 30){
-  // console.log(dimenstion_quilles);
-  dimenstion_quilles = parseInt(prompt("choisissez une résolution entre 5 et 30 pour les quilles :"));
-}
-while(traj_rect_resolution < 10 || dimenstion_quilles > 50){
-  traj_rect_resolution = parseInt(prompt("choisissez une résolution entre 10 et 50 pour la trajectoire :"));
-  traj_non_rect_resolution = traj_rect_resolution;
-}
 
-
-
-
-
-
-
-// while(dimenstion_quilles < 5 || dimenstion_quilles > 30){
-//   dimenstion_quilles = parseInt(prompt("gimme a number"));
+// let ok = false;
+// while( ( dimenstion_quilles < 5 || dimenstion_quilles > 30 ) && !ok){
+//   dimenstion_quilles = parseInt(prompt("choisissez une résolution entre 5 et 30 pour les quilles :"));
+//   if (dimenstion_quilles == 0){
+//     ok = true;
+//     dimenstion_quilles = 15;
+//   }
 // }
-
-
-
-
-
+// while( ( traj_rect_resolution < 10 || dimenstion_quilles > 50 ) &&!ok){
+//   traj_rect_resolution = parseInt(prompt("choisissez une résolution entre 10 et 50 pour la trajectoire :"));
+//   traj_non_rect_resolution = traj_rect_resolution;
+// }
 
 
 
@@ -73,20 +69,18 @@ while(traj_rect_resolution < 10 || dimenstion_quilles > 50){
 
 function init(){
  var stats = initStats();
-    // creation de rendu et de la taille
+  // creation de rendu et de la taille
  let rendu = new THREE.WebGLRenderer({ antialias: true });
  rendu.shadowMap.enabled = true;
    
  rendu.shadowMap.enabled = true;
- rendu.setClearColor(new THREE.Color(0xFFFFFF));
+//  rendu.setClearColor(new THREE.Color(0xFFFFFF));
  rendu.setSize(window.innerWidth*.9, window.innerHeight*.9);
  cameraLumiere(scene,camera);
  lumiere(scene);
  //repere(scene);
  
-    var axes = new THREE.AxesHelper(1);    
-    // scene.add(axes);
-    //repere(scene)
+  var axes = new THREE.AxesHelper(1);
 
 
 
@@ -112,7 +106,7 @@ function init(){
 
 
 // dessiner dis quilles à droite et dis à gauche
-  dis_quilles(0, -3, .5, 1, dimenstion_quilles, 0x169509) //gauche
+  dis_quilles(0, -3, .5, 1, dimenstion_quilles, equipe_1_c) //gauche
   dis_quilles(0, 3, .5, 1, dimenstion_quilles, equipe_2_c) //droite
 
 
@@ -121,14 +115,18 @@ function init(){
 
 
   // dessiner Les murs
-  let plateforme = face_elementaire(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, -15, 0), 0x0037b8);
-  let frontwall = face_elementaire(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(-10, 15, 15), vecteur(-10, -15, 15), 0x051520);
-  let leftwall = face_elementaire(vecteur(-10, -15, 0), vecteur(25, -15, 0), vecteur(25, -15, 15), vecteur(-10, -15, 15), 0x051520);
-  let rightwall = face_elementaire(vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, 15, 15), vecteur(-10, 15, 15), 0x051520);
+  let plateforme = face_elementaire_sp(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, -15, 0), 0x007f8c, 0xffffff, 0);
+  let frontwall = face_elementaire_sp(vecteur(-10, -15, 0), vecteur(-10, 15, 0), vecteur(-10, 15, 15), vecteur(-10, -15, 15), 0x007f8c, 0xffffff, 0);
+  let leftwall = face_elementaire_sp(vecteur(-10, -15, 0), vecteur(25, -15, 0), vecteur(25, -15, 15), vecteur(-10, -15, 15), 0x007f8c, 0xffffff, 0);
+  let rightwall = face_elementaire_sp(vecteur(-10, 15, 0), vecteur(25, 15, 0), vecteur(25, 15, 15), vecteur(-10, 15, 15), 0x007f8c, 0xffffff, 0);
+  let piste_gauche = face_elementaire_sp(vecteur(-6, 5.1, ep), vecteur(-6, 1, ep), vecteur(30, 1, ep), vecteur(30, 5.1, ep), 0x000000, 0xffffff, 0);
+  let piste_droite = face_elementaire_sp(vecteur(-6, 5.1 - 6.1, ep), vecteur(-6, 1 - 6.1, ep), vecteur(30, 1 - 6.1, ep), vecteur(30, 5.1 - 6.1, ep), 0x000000, 0xffffff, 0);
   ajouter(plateforme);
   ajouter(frontwall);
   ajouter(leftwall);
   ajouter(rightwall);
+  ajouter(piste_gauche);
+  ajouter(piste_droite);
 
 
   
@@ -153,62 +151,6 @@ function init(){
   ajouter(preparer_guides_menes(-5.6, equipe_1_c)[0]);
   ajouter(preparer_guides_menes(-5.6, equipe_1_c)[1]);
   ajouter(preparer_guides_menes(-5.6, equipe_1_c)[2]);
-
-
-
-
-
-
-//fonction qui dessine un cube à la position (x,y)
-//de coté a
-function dessiner_parallelo(x, y, a, equipe){
-  ajouter(parallelo(x, y, a, equipe)[0]);
-  ajouter(parallelo(x, y, a, equipe)[1]);
-  ajouter(parallelo(x, y, a, equipe)[2]);
-  ajouter(parallelo(x, y, a, equipe)[3]);
-  ajouter(parallelo(x, y, a, equipe)[4]);
-  ajouter(parallelo(x, y, a, equipe)[5]);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //dessiner une trajectoire rectiligne pour chaque équipe
-  // ajouter(ligne_droite);
-  // ajouter(ligne_gauche);
-
-
-
-
-
-  //définir la trajectoire de chaque équipe
-  // traj_droite = pts_ligne_droite;
-  // traj_gauche = pts_ligne_gauche;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -324,13 +266,6 @@ function dessiner_parallelo(x, y, a, equipe){
 
 
 
-
-
-
-
-
-
-
  
 
 // _____________creatoin d'un sous-menu pour la trajectoire gauche______________
@@ -356,12 +291,6 @@ function dessiner_parallelo(x, y, a, equipe){
   }
 
  });
-
-
-
-
-
-
 
 
 
@@ -403,9 +332,6 @@ function dessiner_parallelo(x, y, a, equipe){
 
 
 //__________________SOUS MENU GUI TRAJ RECTILIGNE__________________
-
-
-
 courbe.add(menu_courbe, "eq_gauche", 0, 1).onChange(function () {
   inclinaison_ratio_g = menu_courbe.eq_gauche;
   if(type_traj_g == 'rect'){
@@ -428,45 +354,11 @@ courbe.add(menu_courbe, "eq_droite", 0, 1).onChange(function () {
 });
 
 
-
-
-
-//____________________rot_____________________________
-courbe.add(menu_courbe, "rot", 0, 2*Math.PI).onChange(function () {
-  let z_axis = new THREE.Vector3(0, 0, 1);
-  boule_orange.rotation.z = menu_courbe.rot;
-});
-
-
-
-
-
-
  //********************************************************
  //
  //  F I N     M E N U     G U I
  //
  //********************************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
 
 
 
@@ -505,9 +397,9 @@ courbe.add(menu_courbe, "rot", 0, 2*Math.PI).onChange(function () {
 
 
 
-function change_pos(pos_input){
 
-  pos = pos_input;
-  btn_state = !btn_state;
 
-}
+
+
+
+

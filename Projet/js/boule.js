@@ -5,18 +5,27 @@ let ep = 0.005;
 
 
 // fonction qui prépare les points de la courbe Tenis.
-function Tenis(divisions, translationX, translationY){
+function Tenis(divisions){
 
   let points = new Array(divisions+1);
+  //new
+  let div = 1000;
+  let m1 = 10;
+  let m2 = 20;
+  let alpha = 0;
+  //end new
   
-  for(let k=0;k<=divisions;k++){
-      let a = (3/4)*(R + ep);
-      let b = (R + ep) - a;
-      let t2=(k*2*Math.PI)/divisions
-      let x0 = a*Math.cos(t2) + b*Math.cos(3*t2) + translationX;
-      let y0 = a*Math.sin(t2) - b*Math.sin(3*t2)  + translationY;
-      let z0 = 2*Math.sqrt(a*b)*Math.sin(2*t2);
-      points[k] = new THREE.Vector3(x0,y0,z0);
+  for(let k=0;k<=div;k++){
+    
+    //new
+    t = k/divisions;
+    x = (R) * ( Math.sin(m2*t) * Math.cos(m1*t-alpha*Math.PI) ) ;
+    y = (R) * ( Math.sin(m2*t) * Math.sin(m1*t-alpha*Math.PI) ) ;
+    z = (R) * ( Math.cos(m2*t) ) ;
+    //end new
+
+
+    points[k] = new THREE.Vector3(x,y,z);
   }
 
   return points;
@@ -59,46 +68,29 @@ function cuisiner_courbe_tennis(points, couleur) {
 
 
 
-
 //fait tout
 function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_tennis){
 
   let sphereG = new THREE.SphereGeometry (R, 30, 20 );
   let material = new THREE.MeshPhongMaterial({ 
-      color: couleur_boule, 
-      opacity: 1,
-      transparent: true, 
-      wireframe: false,
-      emissive : {r:2, g:2, b:2},
-      specular : {r:0, g:255, b:255},
-      shininess : 45,
+    color: couleur_boule, 
+    specular : {r:255, g:255, b:255},
+    shininess : 100,
   } );
 
   let sphere = new THREE.Mesh( sphereG, material );
-
-  // sphere.position.x = x0;
-  // sphere.position.y = y0;
-  // sphere.position.z = R;
-
   let division = 50;
-
   let points_tennis = Tenis(division, 0, 0);
   let courbe_tennis = cuisiner_courbe_tennis(points_tennis, couleur_tennis);
-  // courbe_tennis.position.z += R + ep;
-
   let boule = new THREE.Group();
-  // scene.add(courbe_tennis);
   boule.add(sphere, courbe_tennis);
   boule.position.x = x0;
   boule.position.y = y0;
   boule.position.z = R;
-
-  // return [sphere, courbe_tennis];
-  // console.log(boule);
   return boule;
 
 }
 
 
-let boule_verte = creer_sphere_avec_courbe(23, -3.05, 0x2CFA48, 0xFAA22C);
-let boule_orange = creer_sphere_avec_courbe(23, 3.05, 0xFAA22C, 0x2CFA48);
+let boule_verte = creer_sphere_avec_courbe(23, -3.05, equipe_1_c, equipe_2_c);
+let boule_orange = creer_sphere_avec_courbe(23, 3.05, equipe_2_c, equipe_1_c);

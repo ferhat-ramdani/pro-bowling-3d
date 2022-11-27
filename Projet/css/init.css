@@ -75,7 +75,36 @@ fieldset{
     background-color: rgb(61, 255, 61);
     color: black;
     border: none;
-   font-family: Georgia, serif;
-   font-weight: bold;
-   font-size: 17px;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+
+.cam{
+    position: absolute;
+    padding: 20px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    border: none;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+#cam1{
+    top: 200px;
+    left: 5%;
+}
+#cam2{
+    top: 270px;
+    left: 5%;
+}
+#cam3{
+    top: 340px;
+    left: 5%;
+}
+#cam4{
+    top: 410px;
+    left: 5%;
 }
