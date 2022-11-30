@@ -4,8 +4,8 @@ let ep = 0.005;
 
 
 
-// fonction qui prépare les points de la courbe Tenis.
-function Tenis(divisions){
+// fonction qui prépare les points de la courbe Lissajout.
+function Lissajout(divisions){
 
   let points = new Array(divisions+1);
   //new
@@ -41,19 +41,19 @@ function Tenis(divisions){
 
   
 // fonction qui prends des poins cuisinés et retourne une courbe préparée :
-function cuisiner_courbe_tennis(points, couleur) {
+function cuisiner_courbe_lissajout(points, couleur) {
 
   let PtsTab = new THREE.BufferGeometry().setFromPoints(points);
   let ProprieteCbe = new THREE.LineBasicMaterial( {
     color: couleur, 
     linewidth: 1
   });
-  let Courbe_tenis = new THREE.Line( PtsTab, ProprieteCbe );
-  return Courbe_tenis;
+  let Courbe_Lissajout = new THREE.Line( PtsTab, ProprieteCbe );
+  return Courbe_Lissajout;
 }
   
   
-  
+
   
 
 
@@ -69,7 +69,7 @@ function cuisiner_courbe_tennis(points, couleur) {
 
 
 //fait tout
-function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_tennis){
+function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_lissajout){
 
   let sphereG = new THREE.SphereGeometry (R, 30, 20 );
   let material = new THREE.MeshPhongMaterial({ 
@@ -80,10 +80,10 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_tennis){
 
   let sphere = new THREE.Mesh( sphereG, material );
   let division = 50;
-  let points_tennis = Tenis(division, 0, 0);
-  let courbe_tennis = cuisiner_courbe_tennis(points_tennis, couleur_tennis);
+  let points_lissajout = Lissajout(division, 0, 0);
+  let courbe_lissajout = cuisiner_courbe_lissajout(points_lissajout, couleur_lissajout);
   let boule = new THREE.Group();
-  boule.add(sphere, courbe_tennis);
+  boule.add(sphere, courbe_lissajout);
   boule.position.x = x0;
   boule.position.y = y0;
   boule.position.z = R;

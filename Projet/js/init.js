@@ -6,7 +6,7 @@
 let camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
 let pos = 'center';
 let btn_state = false;
-let dimenstion_quilles = 5;
+let dimenstion_quilles = 3;
 let liste_dis_quilles = [];
 let scene = new THREE.Scene(); 
 let traj_gauche;
@@ -32,6 +32,9 @@ let mene_g = 0;
 let mene_d = 0;
 let n_lancers_g = 0;
 let n_lancers_d = 0;
+let mène_g = 0;
+let mène_d = 0;
+let fst_eq = 0;
 
 
 
@@ -290,6 +293,8 @@ function init(){
 
   }
 
+  camera.position.y = -3.05;
+
  });
 
 
@@ -324,6 +329,8 @@ function init(){
     type_traj_d = 'non rect';
   }
 
+  camera.position.y = +3.05;
+
  });
 
 
@@ -337,6 +344,7 @@ courbe.add(menu_courbe, "eq_gauche", 0, 1).onChange(function () {
   if(type_traj_g == 'rect'){
     dessiner_traj_rect(1, 20);
     traj_gauche = pts_lin_g;
+    camera.position.y = -3.05;
   }
 });
 
@@ -350,6 +358,7 @@ courbe.add(menu_courbe, "eq_droite", 0, 1).onChange(function () {
   if(type_traj_d == 'rect'){
     dessiner_traj_rect(2, 20);
     traj_droite = pts_lin_d;
+    camera.position.y = +3.05;
   }
 });
 

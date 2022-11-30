@@ -1,8 +1,6 @@
 
 let quilles1;
 let quilles2;
-let cont_lancer_g = 0;
-let cont_lancer_d = 0;
 
 setTimeout(() => {
     quilles1 = deep_copy(liste_dis_quilles[0]);
@@ -16,10 +14,10 @@ setTimeout(() => {
 function bouger(obj, points, equipe){
     let quilles;
     if(equipe == 1){
-        cont_lancer_g++;
+        n_lancers_g++;
         quilles = quilles1;
     }else {
-        cont_lancer_d++;
+        n_lancers_d++;
         quilles = quilles2;
     }
 
@@ -102,23 +100,36 @@ function bouger(obj, points, equipe){
         } else {
             obj.position.x = x0;
             obj.position.y = y0;
+            gerer_bts();
+            console.log(quilles.length);
 
-            if(equipe == 2 && type_traj_d == 'non rect' && quilles2.length > 0){
-                courbe_aleratoire_d = generer_courbe(equipe_2_c_bis);
-                pts_bezier_d = courbe_aleratoire_d[0];
-                traj_droite = pts_bezier_d;
-                effacer(bezier_d);
-                bezier_d = courbe_aleratoire_d[1];
-                ajouter(bezier_d);
-            } else if(equipe == 1 && type_traj_g == 'non rect' && quilles1.length > 0){
-                courbe_aleratoire_g = generer_courbe(equipe_1_c);
-                pts_bezier_g = courbe_aleratoire_g[0];
-                traj_gauche = pts_bezier_g;
-
-                effacer(bezier_g);
-                bezier_g = courbe_aleratoire_g[1];
-                translater_pts(pts_bezier_g, bezier_g, - 6.1);
-                ajouter(bezier_g);
+            if(equipe == 2){
+                if(type_traj_d == 'non rect' && quilles2.length > 0){
+                    courbe_aleratoire_d = generer_courbe(equipe_2_c_bis);
+                    pts_bezier_d = courbe_aleratoire_d[0];
+                    traj_droite = pts_bezier_d;
+                    effacer(bezier_d);
+                    bezier_d = courbe_aleratoire_d[1];
+                    ajouter(bezier_d);
+                }
+                if(quilles.length == 0){
+                    console.log("finally");
+                    win("2", "orange");
+                }
+            } else if(equipe == 1){
+                if(type_traj_g == 'non rect' && quilles1.length > 0){
+                    courbe_aleratoire_g = generer_courbe(equipe_1_c);
+                    pts_bezier_g = courbe_aleratoire_g[0];
+                    traj_gauche = pts_bezier_g;
+                    effacer(bezier_g);
+                    bezier_g = courbe_aleratoire_g[1];
+                    translater_pts(pts_bezier_g, bezier_g, - 6.1);
+                    ajouter(bezier_g);
+                }
+                if(quilles.length == 0){
+                    console.log("finally");
+                    win("1", "verte");
+                }
             }
 
             clearInterval(interval);
@@ -220,18 +231,18 @@ function remplace_quille_para(equipe, quille_obj, indice, tab_quilles){
 
 
     if(equipe == 1){
-        if( cont_lancer_g == 1 && tab_quilles.length == 0 ){
+        if( n_lancers_g == 1 && tab_quilles.length == 0 ){
             score_1 = 30;
-        } else if ( cont_lancer_g == 2 && tab_quilles == 0){
+        } else if ( n_lancers_g == 2 && tab_quilles == 0){
             score_1 = 15;
         } else {
             score_1++;
         }
         document.getElementById("verte_score").innerHTML = score_1;
     } else if(equipe == 2){
-        if( cont_lancer_d == 1 && tab_quilles.length == 0 ){
+        if( n_lancers_d == 1 && tab_quilles.length == 0 ){
             score_2 = 30;
-        } else if ( cont_lancer_d == 2 && tab_quilles == 0){
+        } else if ( n_lancers_d == 2 && tab_quilles == 0){
             score_2 = 15;
         } else {
             score_2++;
@@ -310,9 +321,13 @@ setInterval(function(){
   if(pos == 1 && old_state != btn_state){
     camera.position.y = -3.05;
     bouger(boule_verte, traj_gauche, 1);
+    document.getElementById("gauche").disabled = true;
+    document.getElementById("droite").disabled = true;
   } else if(pos == 2 && old_state != btn_state){
     camera.position.y = 3.05;
     bouger(boule_orange, traj_droite, 2);
+    document.getElementById("gauche").disabled = true;
+    document.getElementById("droite").disabled = true;
   }
 
   old_state = btn_state;
@@ -323,6 +338,10 @@ setInterval(function(){
 
 //fonction qui change btn_state lors d'un lancer
 function change_pos(pos_input){
+
+    if(fst_eq == 0){
+        fst_eq = pos_input;
+    }
 
     pos = pos_input;
     btn_state = !btn_state;

@@ -242,9 +242,9 @@ function preparer_guides_menes(y0, c){
 
   trans = y0 - 5.1
 
-  let guide_1 = face_elementaire(vecteur(-6, 5.1 + trans, 0), vecteur(-6, 5.1 + trans, 0.5), vecteur(30, 5.1 + trans, 0.5), vecteur(30, 5.1 + trans, 0), c);
-  let guide_2 = face_elementaire(vecteur(-6, 5.1 + trans, 0.5), vecteur(30, 5.1 + trans, 0.5), vecteur(30, 5.6 + trans, 0.5), vecteur(-6, 5.6 + trans, 0.5), c);
-  let guide_3 = face_elementaire(vecteur(-6, 5.6 + trans, 0.5), vecteur(30, 5.6 + trans, 0.5), vecteur(30, 5.6 + trans, 0), vecteur(-6, 5.6 + trans, 0), c);
+  let guide_1 = face_elementaire(vecteur(-6, y0, 0), vecteur(-6, y0, 0.5), vecteur(30, y0, 0.5), vecteur(30, y0, 0), c);
+  let guide_2 = face_elementaire(vecteur(-6, y0, 0.5), vecteur(30, y0, 0.5), vecteur(30, y0 + 1/2, 0.5), vecteur(-6, y0 + 1/2, 0.5), c);
+  let guide_3 = face_elementaire(vecteur(-6, y0 + 1/2, 0.5), vecteur(30, y0 + 1/2, 0.5), vecteur(30, y0 + 1/2, 0), vecteur(-6, y0 + 1/2, 0), c);
 
   return [guide_1, guide_2, guide_3];
 }

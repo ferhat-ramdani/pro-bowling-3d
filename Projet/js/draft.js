@@ -45,6 +45,6 @@
 
 
 
-function print(text){
-    console.log(text);
-}
+// function print(text){
+//     console.log(text);
+// }

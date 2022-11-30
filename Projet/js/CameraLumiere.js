@@ -78,7 +78,6 @@ function camera_n(i){
         camera.lookAt(0, 0,-1.6);
         camera.zoom = 1;
         camera.updateProjectionMatrix();
-        print(camera);
 
       break;
 
