@@ -1,4 +1,4 @@
-
+let ecart_z = 0.11;
 
 //        FONCTION LIGNE
 
@@ -237,8 +237,8 @@ function revolution(points_profil, x0, y0, echelle_div){
 
 
 //fonction qui prends un y0 et dessine un guide pour 
-//les menes en y0
-function preparer_guides_menes(y0, c){
+//les rigoles en y0
+function preparer_rigoles(y0, c){
 
   trans = y0 - 5.1
 
@@ -269,8 +269,8 @@ function dessiner_traj_rect(equipe){
 
     let pt2_y_g= (4.1-2*R-2*ep) * inclinaison_ratio_g - 5.1 + R + ep;
 
-    let pt1_g = vecteur(23, -3.1, ep);
-    let pt2_g = vecteur(-3, pt2_y_g, ep);
+    let pt1_g = vecteur(23, -3.1, ecart_z);
+    let pt2_g = vecteur(-3, pt2_y_g, ecart_z);
 
     lin_g = cuisine_courbe([pt1_g, pt2_g], equipe_1_c);
     ajouter(lin_g);
@@ -304,8 +304,8 @@ function dessiner_traj_rect(equipe){
 
     let pt2_y_d= (4.1-2*R-2*ep) * inclinaison_ratio_d + 1.1 + R + ep;
 
-    let pt1_d = vecteur(23, 3.1, ep);
-    let pt2_d = vecteur(-3, pt2_y_d, ep);
+    let pt1_d = vecteur(23, 3.1, ecart_z);
+    let pt2_d = vecteur(-3, pt2_y_d, ecart_z);
 
     lin_d = cuisine_courbe([pt1_d, pt2_d], equipe_2_c_bis);
     ajouter(lin_d);

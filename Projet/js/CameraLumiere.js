@@ -10,17 +10,8 @@
   camera.position.set(xPos, yPos, zPos);
   camera.lookAt(xDir, yDir, zDir);
   camera.updateProjectionMatrix();
-  actuaPosCameraHTML(camera);
 } // fin fonction cameraLumiere
 
- function actuaPosCameraHTML(camera){
-  document.forms["controle"].PosX.value=camera.position.x;
-  document.forms["controle"].PosY.value=camera.position.y;
-  document.forms["controle"].PosZ.value=camera.position.z;
-  document.forms["controle"].DirX.value=xDir;
-  document.forms["controle"].DirY.value=yDir;
-  document.forms["controle"].DirZ.value=zDir;
- }
  
 //*************************************************************
 //* 

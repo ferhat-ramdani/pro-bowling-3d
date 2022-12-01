@@ -6,7 +6,7 @@
 let camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
 let pos = 'center';
 let btn_state = false;
-let dimenstion_quilles = 3;
+let dimenstion_quilles = 7;
 let liste_dis_quilles = [];
 let scene = new THREE.Scene(); 
 let traj_gauche;
@@ -135,25 +135,25 @@ function init(){
   
 
   //dessiner les guides de sortie en x0 = 5.1
-  ajouter(preparer_guides_menes(5.1, equipe_2_c)[0]);
-  ajouter(preparer_guides_menes(5.1, equipe_2_c)[1]);
-  ajouter(preparer_guides_menes(5.1, equipe_2_c)[2]);
+  ajouter(preparer_rigoles(5.1, equipe_2_c)[0]);
+  ajouter(preparer_rigoles(5.1, equipe_2_c)[1]);
+  ajouter(preparer_rigoles(5.1, equipe_2_c)[2]);
 
   //dessiner les guides de sortie en x0 = 0.5
-  ajouter(preparer_guides_menes(0.5, equipe_2_c)[0]);
-  ajouter(preparer_guides_menes(0.5, equipe_2_c)[1]);
-  ajouter(preparer_guides_menes(0.5, equipe_2_c)[2]);
+  ajouter(preparer_rigoles(0.5, equipe_2_c)[0]);
+  ajouter(preparer_rigoles(0.5, equipe_2_c)[1]);
+  ajouter(preparer_rigoles(0.5, equipe_2_c)[2]);
 
 
   //dessiner les guides de sortie en x0 = -1
-  ajouter(preparer_guides_menes(-1, equipe_1_c)[0]);
-  ajouter(preparer_guides_menes(-1, equipe_1_c)[1]);
-  ajouter(preparer_guides_menes(-1, equipe_1_c)[2]);
+  ajouter(preparer_rigoles(-1, equipe_1_c)[0]);
+  ajouter(preparer_rigoles(-1, equipe_1_c)[1]);
+  ajouter(preparer_rigoles(-1, equipe_1_c)[2]);
 
   //dessiner les guides de sortie en x0 = -5.6
-  ajouter(preparer_guides_menes(-5.6, equipe_1_c)[0]);
-  ajouter(preparer_guides_menes(-5.6, equipe_1_c)[1]);
-  ajouter(preparer_guides_menes(-5.6, equipe_1_c)[2]);
+  ajouter(preparer_rigoles(-5.6, equipe_1_c)[0]);
+  ajouter(preparer_rigoles(-5.6, equipe_1_c)[1]);
+  ajouter(preparer_rigoles(-5.6, equipe_1_c)[2]);
 
 
 

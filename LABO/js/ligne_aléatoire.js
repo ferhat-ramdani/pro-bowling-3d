@@ -10,7 +10,7 @@ let p2y = -4.1 * p2_y - 1;
 let p2x = -3;
 // console.log(p2x, p2y);
 
-cbe_aleatoire = cuisine_courbe([vecteur(p1x, 0, p1y), vecteur(p2x, 0, p2y)], 0x000000);
+// cbe_aleatoire = cuisine_courbe([vecteur(p1x, 0, p1y), vecteur(p2x, 0, p2y)], 0x000000);
 // console.log(cbe_aleatoire);
 scene.add(cbe_aleatoire);
 
