@@ -26,8 +26,6 @@ function bouger(obj, points, equipe){
     x0 = obj.position.x;
     y0 = obj.position.y;
     let pass = true;
-
-    let count = 0;
     
 
     let interval = setInterval(() => {
@@ -55,14 +53,11 @@ function bouger(obj, points, equipe){
                     let rot_axis_3d = new THREE.Vector3(rot_axis_2d.x, rot_axis_2d.y, 0);
                     let z_axis = new THREE.Vector3(0, 0, 1);
 
-                    let rot_z = vect_dir_2.angle() - vect_dir_1.angle();             
-                    count++;
+                    let rot_z = vect_dir_2.angle() - vect_dir_1.angle();
 
                     obj.rotateOnAxis(z_axis, rot_z);
                     obj.rotateOnAxis(rot_axis_3d, - rot_angle);
                 }
-
-
             }
             
             // variable qui va stoquer les pts du cercle fait 
@@ -101,7 +96,6 @@ function bouger(obj, points, equipe){
             obj.position.x = x0;
             obj.position.y = y0;
             gerer_bts();
-            console.log(quilles.length);
 
             if(equipe == 2){
                 if(type_traj_d == 'non rect' && quilles2.length > 0){
@@ -113,7 +107,6 @@ function bouger(obj, points, equipe){
                     ajouter(bezier_d);
                 }
                 if(quilles.length == 0){
-                    console.log("finally");
                     win("2", "orange");
                 }
             } else if(equipe == 1){
@@ -127,7 +120,6 @@ function bouger(obj, points, equipe){
                     ajouter(bezier_g);
                 }
                 if(quilles.length == 0){
-                    console.log("finally");
                     win("1", "verte");
                 }
             }

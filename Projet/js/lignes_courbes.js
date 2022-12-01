@@ -439,10 +439,13 @@ function parallelo(x, y, a, equipe){
 
 
 function dessiner_parallelo(x, y, a, equipe){
-  ajouter(parallelo(x, y, a, equipe)[0]);
-  ajouter(parallelo(x, y, a, equipe)[1]);
-  ajouter(parallelo(x, y, a, equipe)[2]);
-  ajouter(parallelo(x, y, a, equipe)[3]);
-  ajouter(parallelo(x, y, a, equipe)[4]);
-  ajouter(parallelo(x, y, a, equipe)[5]);
+
+  let paral = parallelo(x, y, a, equipe);
+
+  paral.forEach(face => {
+    
+    ajouter(face);
+
+  });
+
 }
