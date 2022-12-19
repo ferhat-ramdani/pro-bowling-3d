@@ -1,2 +1,3 @@
 # PROJET_INFO3B
- projet sur un jeu de bowling
+ <b>projet sur un jeu de bowling</b><br>
+ un projet portant sur un jeu de bowling 🎳 
