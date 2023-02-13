@@ -240,8 +240,6 @@ function revolution(points_profil, x0, y0, echelle_div){
 //les rigoles en y0
 function preparer_rigoles(y0, c){
 
-  trans = y0 - 5.1
-
   let guide_1 = face_elementaire(vecteur(-6, y0, 0), vecteur(-6, y0, 0.5), vecteur(30, y0, 0.5), vecteur(30, y0, 0), c);
   let guide_2 = face_elementaire(vecteur(-6, y0, 0.5), vecteur(30, y0, 0.5), vecteur(30, y0 + 1/2, 0.5), vecteur(-6, y0 + 1/2, 0.5), c);
   let guide_3 = face_elementaire(vecteur(-6, y0 + 1/2, 0.5), vecteur(30, y0 + 1/2, 0.5), vecteur(30, y0 + 1/2, 0), vecteur(-6, y0 + 1/2, 0), c);
@@ -414,8 +412,6 @@ function parallelo(x, y, a, equipe){
   
   return [f_bas, f_haut, f_derier, f_devant, f_gauche, f_droite] ;
 }
-
-
 
 
 
