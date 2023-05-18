@@ -21,4 +21,4 @@ The "libs" folder houses essential libraries required for the project to functio
 1. RAMDANI Ferhat
 2. AHMIM Mohamed
 
-# 🌟 Enjoy the game and have a striking experience! 🎳✨
+## 🌟 Enjoy the game and have a striking experience! ✨
