@@ -18,7 +18,8 @@ The "libs" folder houses essential libraries required for the project to functio
 2. Enjoy !
 
 ## 👥 Authors:
-1. RAMDANI Ferhat
-2. AHMIM Mohamed
+
+- AHMIM Mohamed ([@Mohamed](https://github.com/MohamedAhmim))
+- RAMDANI Ferhat ([@Ferhat](https://github.com/ferhat-ramdani))
 
 ## 🌟 Enjoy the game and have a striking experience! ✨
