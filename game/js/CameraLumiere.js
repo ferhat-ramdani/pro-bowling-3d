@@ -1,5 +1,5 @@
 // Lighting and Camera Setup
-let targetCamPos = new THREE.Vector3(35, 0, 4);
+let targetCamPos = new THREE.Vector3(70, 0, 7);
 let targetCamLook = new THREE.Vector3(0, 0, 0);
 let currentCamLook = new THREE.Vector3(0, 0, 0);
 
@@ -18,12 +18,12 @@ function updateCameraTransition() {
 }
 
 function lumiere(scene) {
-    // Ambient Light to boost overall visibility across the whole room
-    let ambient = new THREE.AmbientLight(0xffffff, 0.7);
+    // Ambient Light
+    let ambient = new THREE.AmbientLight(0xffffff, 0.8); // Restored contrast by reducing from 2.0 to 0.8
     scene.add(ambient);
 
     // Main Central Light (Ceiling Light)
-    let centralLight = new THREE.PointLight(0xffffff, 0.6, 100);
+    let centralLight = new THREE.PointLight(0xffffff, 1.5, 100); // Brighter central light
     centralLight.position.set(10, 0, 15);
     centralLight.castShadow = true;
     centralLight.shadow.mapSize.width = 2048;
@@ -31,33 +31,32 @@ function lumiere(scene) {
     scene.add(centralLight);
 
     // Directional light from the front to light the pins clearly
-    let dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    let dirLight = new THREE.DirectionalLight(0xffffff, 1.2); // Brighter directional light
     dirLight.position.set(-10, 0, 10);
     scene.add(dirLight);
+
+    // Dramatic Spotlight for Left Lane Pins
+    let spotLeft = new THREE.SpotLight(0xffffff, 7.0); // Bright intensity
+    spotLeft.position.set(10, -6, 15);
+    spotLeft.target.position.set(0, -6, 0);
+    spotLeft.angle = Math.PI / 6; // Narrow beam
+    spotLeft.penumbra = 0.5; // Soft edges
+    spotLeft.castShadow = true;
+    scene.add(spotLeft);
+    scene.add(spotLeft.target);
+
+    // Dramatic Spotlight for Right Lane Pins
+    let spotRight = new THREE.SpotLight(0xffffff, 7.0); // Bright intensity
+    spotRight.position.set(10, 6, 15);
+    spotRight.target.position.set(0, 6, 0);
+    spotRight.angle = Math.PI / 6;
+    spotRight.penumbra = 0.5;
+    spotRight.castShadow = true;
+    scene.add(spotRight);
+    scene.add(spotRight.target);
 }
 
 function camera_n(i) {
-    switch (i) {
-        case 1:
-            targetCamPos.set(35, 0, 4);
-            targetCamLook.set(0, 0, 0);
-            camera.zoom = 1;
-            break;
-        case 2:
-            targetCamPos.set(50, 0, 20);
-            targetCamLook.set(0, 0, -1.6);
-            camera.zoom = 1;
-            break;
-        case 3:
-            targetCamPos.set(11, 0, 50);
-            targetCamLook.set(11, 0, 0);
-            camera.zoom = 1;
-            break;
-        case 4:
-            targetCamPos.set(-8, 0, 3);
-            targetCamLook.set(2, 0, 0);
-            camera.zoom = 0.5;
-            break;
-    }
-    camera.updateProjectionMatrix();
+    // The user requested ONE static camera position, so we disable all dynamic camera shifting.
+    // The camera will remain locked at the position defined above.
 }

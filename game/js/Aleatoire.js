@@ -8,11 +8,11 @@ let bezier_g;
 
 // Instead of crazy extreme math, we use THREE.CubicBezierCurve3 to generate smooth, natural curves
 function generer_courbe(couleur, team) {
-    let startX = 23;
-    let startY = team === 1 ? -3.05 : 3.05;
+    let startX = 45;
+    let startY = team === 1 ? -6 : 6;
     
     let remainingPins = team === 1 ? quilles1 : quilles2;
-    let targetPinY = team === 1 ? -3 : 3;
+    let targetPinY = team === 1 ? -6 : 6;
     if (remainingPins && remainingPins.length > 0) {
         let randomPin = remainingPins[Math.floor(Math.random() * remainingPins.length)];
         targetPinY = randomPin.position.posy;

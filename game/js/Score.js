@@ -21,7 +21,7 @@ function initScoreboard() {
     };
     
     document.getElementById('cyan-frames').innerHTML = renderFrames('t1');
-    document.getElementById('orange-frames').innerHTML = renderFrames('t2');
+    document.getElementById('red-frames').innerHTML = renderFrames('t2');
 }
 
 function showBanner(text, typeClass) {
@@ -75,7 +75,7 @@ function calculateScores(teamKey) {
 function updateScoreUI() {
     ['t1', 't2'].forEach(teamKey => {
         let state = gameState[teamKey];
-        document.getElementById(teamKey === 't1' ? 'cyan-total' : 'orange-total').textContent = state.score;
+        document.getElementById(teamKey === 't1' ? 'cyan-total' : 'red-total').textContent = state.score;
         
         for(let i=0; i<10; i++) {
             let f = state.frames[i];

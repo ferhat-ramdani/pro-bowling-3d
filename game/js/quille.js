@@ -76,12 +76,13 @@ function cuisiner_quille(x, y, resolution, couleur) {
     return null;
 }
 
-const physPinMaterial = Physijs.createMaterial(pinMaterial, 0.4, 0.6); // friction 0.4, restitution 0.6
+const physPinMaterial = Physijs.createMaterial(pinMaterial, 0.4, 0.2); // friction 0.4, restitution 0.2 (low bounce to prevent endless wobbling)
 
 function dessiner_quille_bis(x, y, resolution, couleur) {
     let pin = new Physijs.ConvexMesh(pinGeometry, physPinMaterial, 4.0); // ConvexMesh perfectly matches the Z-up geometry! Increased mass to 4.0
     // The geometry is centered at Z=0. Since half height is 1, placing it at Z=1.1 means base is at Z=0.1
     pin.position.set(x, y, 1.1); 
+    pin.setDamping(0.1, 0.6); // High angular damping forces it to settle and stop wobbling immediately
     pin.castShadow = true;
     pin.receiveShadow = true;
     ajouter(pin);
@@ -100,9 +101,9 @@ function clearPins(team) {
 function resetLane(team) {
     clearPins(team);
     let x0 = 0;
-    let y0 = team === 1 ? -3 : 3;
-    let x_gap = 0.6;
-    let y_gap = 1.2;
+    let y0 = team === 1 ? -6 : 6;
+    let x_gap = 1.0;
+    let y_gap = 1.15;
     
     let arr = team === 1 ? allSpawnedPins1 : allSpawnedPins2;
     let standingArr = [];

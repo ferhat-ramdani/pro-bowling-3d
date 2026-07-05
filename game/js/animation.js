@@ -50,7 +50,7 @@ function bouger(obj, points, equipe) {
     // Real physics: push the ball!
     // We give it a strong forward velocity (X is negative towards pins)
     let vx = -25;
-    let vy = (yDiff / 23) * 25; // proportional to reach the target Y
+    let vy = (yDiff / 45) * 25; // proportional to reach the target Y across 45 units
 
     obj.setLinearVelocity(new THREE.Vector3(vx, vy, 0));
 
@@ -80,11 +80,11 @@ function bouger(obj, points, equipe) {
                     let pinObj = standingArr[i];
                     let mesh = pinObj.quille;
 
-                    // A pin is fallen if it tipped over significantly (rotation > ~45 deg) or fell off
-                    let isFallen = Math.abs(mesh.rotation.x) > 0.8 ||
-                        Math.abs(mesh.rotation.y) > 0.8 ||
-                        Math.abs(mesh.rotation.z) > 0.8 ||
-                        mesh.position.z < 0;
+                    // Robust Gimbal-lock-free check: Get the pin's actual UP vector
+                    let upDir = new THREE.Vector3(0, 0, 1).applyQuaternion(mesh.quaternion);
+                    
+                    // A pin is fallen if it tipped over significantly (Z component < 0.8) or fell off the edge
+                    let isFallen = upDir.z < 0.8 || mesh.position.z < 0;
 
                     if (!isFallen) {
                         remainingStanding.push(pinObj);

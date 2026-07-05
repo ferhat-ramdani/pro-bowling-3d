@@ -84,7 +84,7 @@
         }
 
         .cyan-team .team-name { color: #00e5ff; }
-        .orange-team .team-name { color: #ff5500; }
+        .red-team .team-name { color: #ff0022; }
 
         .frames {
             display: flex;
@@ -218,16 +218,16 @@
             bottom: 60px;
             right: 25%;
             transform: translateX(50%);
-            background-color: #ff5500;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(255, 85, 0, 0.3);
+            background-color: #ff0022;
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 0, 34, 0.3);
             z-index: 100;
         }
 
         #droite:hover:not(:disabled) {
-            background-color: #cc4400;
+            background-color: #cc001b;
             transform: translate(50%, -2px);
-            box-shadow: 0 0 20px rgba(255, 85, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 34, 0.5);
         }
 
     </style>
@@ -244,10 +244,10 @@
                 <div class="frames" id="cyan-frames"></div>
                 <div class="total-score" id="cyan-total">0</div>
             </div>
-            <div class="team-row orange-team">
-                <div class="team-name">ORANGE</div>
-                <div class="frames" id="orange-frames"></div>
-                <div class="total-score" id="orange-total">0</div>
+            <div class="team-row red-team">
+                <div class="team-name">RED</div>
+                <div class="frames" id="red-frames"></div>
+                <div class="total-score" id="red-total">0</div>
             </div>
         </div>
 
@@ -267,14 +267,14 @@
     <div id="webgl"></div>
 
     <!-- Game Logic Scripts (Strict Ordering) -->
-    <script src="../js/Score.js?v=2"></script>
-    <script src="../js/CameraLumiere.js?v=2"></script>
-    <script src="../js/boule.js?v=2"></script>
-    <script src="../js/animation.js?v=2"></script>
-    <script src="../js/quille.js?v=2"></script>
-    <script src="../js/lignes_courbes.js?v=2"></script>
-    <script src="../js/Aleatoire.js?v=2"></script>
-    <script src="../js/init.js?v=2"></script>
+    <script src="../js/Score.js?v=11"></script>
+    <script src="../js/CameraLumiere.js?v=11"></script>
+    <script src="../js/boule.js?v=11"></script>
+    <script src="../js/animation.js?v=11"></script>
+    <script src="../js/quille.js?v=11"></script>
+    <script src="../js/lignes_courbes.js?v=11"></script>
+    <script src="../js/Aleatoire.js?v=11"></script>
+    <script src="../js/init.js?v=11"></script>
 
 </body>
 </html>

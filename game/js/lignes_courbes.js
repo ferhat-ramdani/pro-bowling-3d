@@ -23,12 +23,12 @@ function cuisine_courbe(points, couleur) {
 }
 
 function dessiner_traj_rect(equipe) {
-    let startX = 23;
-    let startY = equipe === 1 ? -3.1 : 3.1;
+    let startX = 45;
+    let startY = equipe === 1 ? -6 : 6;
     let remainingPins = equipe === 1 ? quilles1 : quilles2;
     let ratio = equipe === 1 ? inclinaison_ratio_g : inclinaison_ratio_d;
     
-    let targetPinY = equipe === 1 ? -3 : 3;
+    let targetPinY = equipe === 1 ? -6 : 6;
     if (remainingPins && remainingPins.length > 0) {
         // Use the slider ratio to pick a pin deterministically
         let index = Math.floor(ratio * (remainingPins.length - 1));

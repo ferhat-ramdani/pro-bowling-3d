@@ -68,10 +68,12 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
     let boule = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); // 7.0 kg mass
     
     // The visual mesh with holes (smoother and shinier)
-    let visualMat = new THREE.MeshStandardMaterial({
+    let visualMat = new THREE.MeshPhysicalMaterial({
         color: couleur_boule,
-        roughness: 0.05,
-        metalness: 0.6
+        roughness: 0.3,
+        metalness: 0.1,
+        clearcoat: 1.0, // High-end realistic clearcoat gloss
+        clearcoatRoughness: 0.05
     });
     
     let visualMesh = new THREE.Mesh(visualGeom, visualMat);
@@ -104,6 +106,28 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
     innerFinger2.rotation.copy(finger2Rot);
     innerFinger2.translateY(-0.08);
     visualMesh.add(innerFinger2);
+
+    // Create rounded bevels at the rim of the holes using TorusGeometry
+    let rimThumb = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.008, 16, 32), visualMat);
+    rimThumb.position.copy(thumbPos);
+    rimThumb.rotation.copy(thumbRot);
+    rimThumb.rotateX(Math.PI / 2); // Align torus Z-axis with cylinder Y-axis
+    rimThumb.translateZ(0.08); // Push outward to surface
+    visualMesh.add(rimThumb);
+
+    let rimFinger1 = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.008, 16, 32), visualMat);
+    rimFinger1.position.copy(finger1Pos);
+    rimFinger1.rotation.copy(finger1Rot);
+    rimFinger1.rotateX(Math.PI / 2);
+    rimFinger1.translateZ(0.065); // Push outward to surface
+    visualMesh.add(rimFinger1);
+
+    let rimFinger2 = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.008, 16, 32), visualMat);
+    rimFinger2.position.copy(finger2Pos);
+    rimFinger2.rotation.copy(finger2Rot);
+    rimFinger2.rotateX(Math.PI / 2);
+    rimFinger2.translateZ(0.065); // Push outward to surface
+    visualMesh.add(rimFinger2);
     
     // Rotate visual mesh so holes face the camera (+X axis) instead of up (+Z)
     visualMesh.rotation.y = Math.PI / 2;
@@ -116,9 +140,9 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
 
 // Improved Team Colors
 let equipe_1_c = 0x00e5ff; // Electric Cyan
-let equipe_2_c = 0xff5500; // Deep Orange Red
-let equipe_2_c_bis = 0xff5500;
+let equipe_2_c = 0xff0022; // Vibrant Professional Red
+let equipe_2_c_bis = 0xff0022;
 
 // Expose them globally for init.js
-let boule_verte = creer_sphere_avec_courbe(23, -3.05, equipe_1_c, 0xffffff);
-let boule_orange = creer_sphere_avec_courbe(23, 3.05, equipe_2_c, 0xffffff);
+let boule_verte = creer_sphere_avec_courbe(45, -6, equipe_1_c, 0xffffff);
+let boule_orange = creer_sphere_avec_courbe(45, 6, equipe_2_c, 0xffffff);

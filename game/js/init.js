@@ -44,39 +44,58 @@ function init() {
     ajouter(boule_verte);
     ajouter(boule_orange);
 
-    dis_quilles(0, -3, 0.6, 1.2, dimenstion_quilles, 0xffffff); // gauche
-    dis_quilles(0, 3, 0.6, 1.2, dimenstion_quilles, 0xffffff); // droite
+    // Professional pin spacing (equilateral triangle, ~12 inches between pins)
+    dis_quilles(0, -6, 1.0, 1.15, dimenstion_quilles, 0xffffff); // gauche
+    dis_quilles(0, 6, 1.0, 1.15, dimenstion_quilles, 0xffffff); // droite
 
     // Murs et Pistes (Using modern Box/Plane Geometries)
     let wallMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x2a3b4c, roughness: 0.7 }), 0.8, 0.4);
     let floorMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.3, metalness: 0.1 }), 0.8, 0.4);
+    let bumperMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 }), 0.8, 0.4);
 
-    let plateforme = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 30, 20), wallMat, 0); // mass 0 = static
-    plateforme.position.set(7.5, 0, -10);
+    let plateforme = new Physijs.BoxMesh(new THREE.BoxGeometry(80, 40, 20), wallMat, 0); // mass 0 = static
+    plateforme.position.set(25, 0, -10);
     plateforme.receiveShadow = true;
     ajouter(plateforme);
 
-    let frontwall = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 30, 15), wallMat, 0);
-    frontwall.position.set(-10.5, 0, 7.5);
+    let frontwall = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 40, 15), wallMat, 0);
+    frontwall.position.set(-15.5, 0, 7.5);
     ajouter(frontwall);
 
-    let leftwall = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 1, 15), wallMat, 0);
-    leftwall.position.set(7.5, -15.5, 7.5);
+    let leftwall = new Physijs.BoxMesh(new THREE.BoxGeometry(80, 1, 15), wallMat, 0);
+    leftwall.position.set(25, -20.5, 7.5);
     ajouter(leftwall);
 
-    let rightwall = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 1, 15), wallMat, 0);
-    rightwall.position.set(7.5, 15.5, 7.5);
+    let rightwall = new Physijs.BoxMesh(new THREE.BoxGeometry(80, 1, 15), wallMat, 0);
+    rightwall.position.set(25, 20.5, 7.5);
     ajouter(rightwall);
 
-    let piste_gauche = new Physijs.BoxMesh(new THREE.BoxGeometry(36, 4.1, 2.0), floorMat, 0);
-    piste_gauche.position.set(12, -3.05, -0.9);
+    // Expanded professional lanes
+    let piste_gauche = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 6.0, 2.0), floorMat, 0);
+    piste_gauche.position.set(24, -6, -0.9);
     piste_gauche.receiveShadow = true;
     ajouter(piste_gauche);
 
-    let piste_droite = new Physijs.BoxMesh(new THREE.BoxGeometry(36, 4.1, 2.0), floorMat, 0);
-    piste_droite.position.set(12, 3.05, -0.9);
+    let piste_droite = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 6.0, 2.0), floorMat, 0);
+    piste_droite.position.set(24, 6, -0.9);
     piste_droite.receiveShadow = true;
     ajouter(piste_droite);
+
+    // Guardrails (Bumpers) for left lane
+    let gl_left = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
+    gl_left.position.set(24, -9.25, 0.35);
+    ajouter(gl_left);
+    let gl_right = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
+    gl_right.position.set(24, -2.75, 0.35);
+    ajouter(gl_right);
+
+    // Guardrails (Bumpers) for right lane
+    let gr_left = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
+    gr_left.position.set(24, 2.75, 0.35);
+    ajouter(gr_left);
+    let gr_right = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
+    gr_right.position.set(24, 9.25, 0.35);
+    ajouter(gr_right);
 
     // ********************************************************
     // M E N U   G U I
