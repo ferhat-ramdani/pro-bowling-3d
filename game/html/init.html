@@ -9,6 +9,7 @@
     
     <!-- Dependencies -->
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/three.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="../../libs/other/physijs/physi.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/other/ThreeBSP.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/TrackballControls.js"></script>
     <script type="text/javascript" src="../../libs/util/dat.gui.js"></script>
@@ -50,36 +51,130 @@
             pointer-events: auto;
         }
 
-        /* Scoreboard */
-        #table {
-            border-collapse: collapse;
-            background: rgba(20, 30, 48, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            text-align: left;
+        /* Overhead Scoreboard */
+        #overhead-scoreboard {
             position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 250px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            font-size: 14px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: rgba(10, 15, 25, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 5px 20px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            z-index: 200;
+            transform: scale(0.85);
+            transform-origin: top center;
         }
 
-        #table th, #table td {
-            padding: 12px 16px;
+        .team-row {
+            display: flex;
+            align-items: center;
+            margin: 2px 0;
+        }
+
+        .team-name {
+            width: 80px;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .cyan-team .team-name { color: #00e5ff; }
+        .orange-team .team-name { color: #ff5500; }
+
+        .frames {
+            display: flex;
+            flex: 1;
+            gap: 5px;
+        }
+
+        .frame {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .frame-header {
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        #table th {
-            color: #888;
-            text-transform: uppercase;
+        .frame-throws {
+            display: flex;
+            height: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .throw-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 12px;
+            font-weight: 600;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .throw-box:last-child { border-right: none; }
+
+        .frame-score {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            padding: 5px 0;
+        }
+
+        .total-score {
+            width: 80px;
+            text-align: right;
+            font-size: 24px;
             font-weight: 800;
         }
 
-        .verte { color: #00e5ff; font-weight: 600; }
-        .orange { color: #ff5500; font-weight: 600; }
+        /* Announcement Banner */
+        #announce-banner {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 300;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        #announce-banner.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        #announce-text {
+            font-size: 80px;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-text-stroke: 2px rgba(255,255,255,0.2);
+        }
+
+        .strike-text { color: #ffd700; }
+        .spare-text { color: #00e5ff; }
+        .open-text { color: #ffffff; }
 
         /* Controls positioning */
         .btn {
@@ -98,7 +193,6 @@
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none !important;
             box-shadow: none !important;
         }
         
@@ -136,46 +230,6 @@
             box-shadow: 0 0 20px rgba(255, 85, 0, 0.5);
         }
 
-        /* Cameras Sidebar */
-        .camera-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: rgba(20, 30, 48, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-        }
-
-        .camera-container h3 {
-            margin: 0 0 10px 0;
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-        }
-
-        .cam {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            padding: 10px 15px;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .cam:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
     </style>
 </head>
 
@@ -183,28 +237,25 @@
 
     <!-- UI -->
     <div class="ui-layer interactive">
-        <table id="table">
-            <tr>
-                <th>Team</th>
-                <th>Score</th>
-            </tr>
-            <tr>
-                <td class="verte">Cyan</td>
-                <td class="verte" id="verte_score">0</td>
-            </tr>
-            <tr>
-                <td class="orange">Orange</td>
-                <td class="orange" id="orange_score">0</td>
-            </tr>
-        </table>
-
-        <div class="camera-container">
-            <h3>Camera Presets</h3>
-            <button class="cam" id="cam1" onclick="camera_n(1)">1: Overview</button>
-            <button class="cam" id="cam2" onclick="camera_n(2)">2: Action Follow</button>
-            <button class="cam" id="cam3" onclick="camera_n(3)">3: Side View</button>
-            <button class="cam" id="cam4" onclick="camera_n(4)">4: Top Down</button>
+        
+        <div id="overhead-scoreboard">
+            <div class="team-row cyan-team">
+                <div class="team-name">CYAN</div>
+                <div class="frames" id="cyan-frames"></div>
+                <div class="total-score" id="cyan-total">0</div>
+            </div>
+            <div class="team-row orange-team">
+                <div class="team-name">ORANGE</div>
+                <div class="frames" id="orange-frames"></div>
+                <div class="total-score" id="orange-total">0</div>
+            </div>
         </div>
+
+        <div id="announce-banner">
+            <h1 id="announce-text">STRIKE!</h1>
+        </div>
+
+        <!-- Cameras removed per request -->
 
         <div>
             <button id="gauche" class="btn" onclick="change_pos(1)">THROW</button>

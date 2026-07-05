@@ -5,19 +5,19 @@ let ep = 0.005;
 function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
     let sphereG = new THREE.SphereGeometry(R, 32, 32);
     
-    // Create a marble-like shiny material
-    let material = new THREE.MeshStandardMaterial({
-        color: couleur_boule,
-        roughness: 0.1,
-        metalness: 0.4
-    });
+    let physMaterial = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial({
+            color: couleur_boule,
+            roughness: 0.1,
+            metalness: 0.4
+        }),
+        0.6, // friction
+        0.5  // restitution
+    );
 
-    let sphere = new THREE.Mesh(sphereG, material);
-    sphere.castShadow = true;
-    sphere.receiveShadow = true;
-
-    let boule = new THREE.Group();
-    boule.add(sphere);
+    let boule = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); // 7.0 kg mass
+    boule.castShadow = true;
+    boule.receiveShadow = true;
 
     boule.position.set(x0, y0, R);
     return boule;

@@ -1,5 +1,9 @@
+Physijs.scripts.worker = '../../libs/other/physijs/physijs_worker.js';
+Physijs.scripts.ammo = 'ammo.js';
+
 let camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
-let scene = new THREE.Scene(); 
+let scene = new Physijs.Scene({ fixedTimeStep: 1 / 60 });
+scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
 let traj_gauche;
 let traj_droite;
 let type_traj_d;
@@ -40,37 +44,37 @@ function init() {
     ajouter(boule_verte);
     ajouter(boule_orange);
 
-    dis_quilles(0, -3, 0.5, 1, dimenstion_quilles, 0xffffff); // gauche
-    dis_quilles(0, 3, 0.5, 1, dimenstion_quilles, 0xffffff); // droite
+    dis_quilles(0, -3, 0.6, 1.2, dimenstion_quilles, 0xffffff); // gauche
+    dis_quilles(0, 3, 0.6, 1.2, dimenstion_quilles, 0xffffff); // droite
 
     // Murs et Pistes (Using modern Box/Plane Geometries)
-    let wallMat = new THREE.MeshStandardMaterial({ color: 0x2a3b4c, roughness: 0.7 });
-    let floorMat = new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.3, metalness: 0.1 });
+    let wallMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x2a3b4c, roughness: 0.7 }), 0.8, 0.4);
+    let floorMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.3, metalness: 0.1 }), 0.8, 0.4);
 
-    let plateforme = new THREE.Mesh(new THREE.BoxGeometry(35, 30, 1), wallMat);
+    let plateforme = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 30, 1), wallMat, 0); // mass 0 = static
     plateforme.position.set(7.5, 0, -0.5);
     plateforme.receiveShadow = true;
     ajouter(plateforme);
 
-    let frontwall = new THREE.Mesh(new THREE.BoxGeometry(1, 30, 15), wallMat);
+    let frontwall = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 30, 15), wallMat, 0);
     frontwall.position.set(-10.5, 0, 7.5);
     ajouter(frontwall);
 
-    let leftwall = new THREE.Mesh(new THREE.BoxGeometry(35, 1, 15), wallMat);
+    let leftwall = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 1, 15), wallMat, 0);
     leftwall.position.set(7.5, -15.5, 7.5);
     ajouter(leftwall);
 
-    let rightwall = new THREE.Mesh(new THREE.BoxGeometry(35, 1, 15), wallMat);
+    let rightwall = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 1, 15), wallMat, 0);
     rightwall.position.set(7.5, 15.5, 7.5);
     ajouter(rightwall);
 
-    let piste_gauche = new THREE.Mesh(new THREE.PlaneGeometry(36, 4.1), floorMat);
-    piste_gauche.position.set(12, -3.05, 0.01);
+    let piste_gauche = new Physijs.BoxMesh(new THREE.BoxGeometry(36, 4.1, 2.0), floorMat, 0);
+    piste_gauche.position.set(12, -3.05, -0.9);
     piste_gauche.receiveShadow = true;
     ajouter(piste_gauche);
 
-    let piste_droite = new THREE.Mesh(new THREE.PlaneGeometry(36, 4.1), floorMat);
-    piste_droite.position.set(12, 3.05, 0.01);
+    let piste_droite = new Physijs.BoxMesh(new THREE.BoxGeometry(36, 4.1, 2.0), floorMat, 0);
+    piste_droite.position.set(12, 3.05, -0.9);
     piste_droite.receiveShadow = true;
     ajouter(piste_droite);
 
@@ -165,6 +169,7 @@ function init() {
     
     function renduAnim() {
         stats.update();
+        scene.simulate();
         rendu.render(scene, camera);
         requestAnimationFrame(renduAnim);
     }
