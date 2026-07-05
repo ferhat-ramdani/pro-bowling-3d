@@ -1,96 +1,33 @@
-
 let R = 0.55;
 let ep = 0.005;
 
-
-
-// fonction qui prépare les points de la courbe Lissajous.
-function Lissajous(divisions){
-
-  let points = new Array(divisions+1);
-  //new
-  let div = 1000;
-  let m1 = 10;
-  let m2 = 20;
-  let alpha = 0;
-  //end new
-  
-  for(let k=0;k<=div;k++){
+// We use modern shiny materials for the balls instead of manual lissajous curves
+function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
+    let sphereG = new THREE.SphereGeometry(R, 32, 32);
     
-    //new
-    t = k/divisions;
-    x = (R) * ( Math.sin(m2*t) * Math.cos(m1*t-alpha*Math.PI) ) ;
-    y = (R) * ( Math.sin(m2*t) * Math.sin(m1*t-alpha*Math.PI) ) ;
-    z = (R) * ( Math.cos(m2*t) ) ;
-    //end new
+    // Create a marble-like shiny material
+    let material = new THREE.MeshStandardMaterial({
+        color: couleur_boule,
+        roughness: 0.1,
+        metalness: 0.4
+    });
 
+    let sphere = new THREE.Mesh(sphereG, material);
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
 
-    points[k] = new THREE.Vector3(x,y,z);
-  }
+    let boule = new THREE.Group();
+    boule.add(sphere);
 
-  return points;
+    boule.position.set(x0, y0, R);
+    return boule;
 }
 
+// Improved Team Colors
+let equipe_1_c = 0x00e5ff; // Electric Cyan
+let equipe_2_c = 0xff5500; // Deep Orange Red
+let equipe_2_c_bis = 0xff5500;
 
-
-
-
-
-
-
-
-  
-// fonction qui prends des poins cuisinés et retourne une courbe préparée :
-function cuisiner_courbe_lissajous(points, couleur) {
-
-  let PtsTab = new THREE.BufferGeometry().setFromPoints(points);
-  let ProprieteCbe = new THREE.LineBasicMaterial( {
-    color: couleur, 
-    linewidth: 1
-  });
-  let Courbe_Lissajous = new THREE.Line( PtsTab, ProprieteCbe );
-  return Courbe_Lissajous;
-}
-  
-  
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-//fait tout
-function creer_sphere_avec_courbe(x0, y0, couleur_boule, couleur_lissajous){
-
-  let sphereG = new THREE.SphereGeometry (R, 30, 20 );
-  let material = new THREE.MeshPhongMaterial({ 
-    color: couleur_boule, 
-    specular : {r:255, g:255, b:255},
-    shininess : 100,
-  } );
-
-  let sphere = new THREE.Mesh( sphereG, material );
-  let division = 50;
-  let points_lissajous = Lissajous(division, 0, 0);
-  let courbe_lissajous = cuisiner_courbe_lissajous(points_lissajous, couleur_lissajous);
-  let boule = new THREE.Group();
-  boule.add(sphere, courbe_lissajous);
-  boule.position.x = x0;
-  boule.position.y = y0;
-  boule.position.z = R;
-  return boule;
-
-}
-
-
-let boule_verte = creer_sphere_avec_courbe(23, -3.05, equipe_1_c, equipe_2_c);
-let boule_orange = creer_sphere_avec_courbe(23, 3.05, equipe_2_c, equipe_1_c);
+// Expose them globally for init.js
+let boule_verte = creer_sphere_avec_courbe(23, -3.05, equipe_1_c, 0xffffff);
+let boule_orange = creer_sphere_avec_courbe(23, 3.05, equipe_2_c, 0xffffff);

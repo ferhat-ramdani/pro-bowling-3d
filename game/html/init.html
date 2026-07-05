@@ -1,106 +1,229 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<html lang="en">
 
 <head>
-    <meta  charset="utf-8">
+    <meta charset="utf-8">
     <meta name="author" content="Lionel Garnier, Université de Bourgogne">
-    <meta name="copyright" content="Lionel Garnier">
-    <title>Bowling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowling 3D - Modernized</title>
+    
+    <!-- Dependencies -->
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/other/ThreeBSP.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/TrackballControls.js"></script>
     <script type="text/javascript" src="../../libs/util/dat.gui.js"></script>
     <script type="text/javascript" src="../../libs/util/Stats.js"></script>
     <script type="text/javascript" src="../../libs/util/util.js"></script>
-    <script type="text/javascript" src="../js/CameraLumiere.js"></script>
-    <script type="text/javascript" src="../js/init.js"></script>
-    <script src="../js/quille.js"></script>
-    <script src="../js/animation.js"></script>
-    <script src="../js/boule.js"></script>
-    <script src="../js/Score.js"></script>
-    <script src="../js/Aleatoire.js"></script>
-    <script src="../js/lignes_courbes.js"></script>
-    <link rel="stylesheet" href="../css/init.css">
-</head>
 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0e1a;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+
+        #webgl {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Glassmorphism UI */
+        .ui-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through */
+        }
+        
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Scoreboard */
+        #table {
+            border-collapse: collapse;
+            background: rgba(20, 30, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-align: left;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            font-size: 14px;
+        }
+
+        #table th, #table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #table th {
+            color: #888;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .verte { color: #00e5ff; font-weight: 600; }
+        .orange { color: #ff5500; font-weight: 600; }
+
+        /* Controls positioning */
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        #gauche {
+            position: absolute;
+            bottom: 60px;
+            left: 25%;
+            transform: translateX(-50%);
+            background-color: #00e5ff;
+            color: #0a0e1a;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            z-index: 100;
+        }
+
+        #gauche:hover:not(:disabled) {
+            background-color: #00b3cc;
+            transform: translate(-50%, -2px);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+
+        #droite {
+            position: absolute;
+            bottom: 60px;
+            right: 25%;
+            transform: translateX(50%);
+            background-color: #ff5500;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 85, 0, 0.3);
+            z-index: 100;
+        }
+
+        #droite:hover:not(:disabled) {
+            background-color: #cc4400;
+            transform: translate(50%, -2px);
+            box-shadow: 0 0 20px rgba(255, 85, 0, 0.5);
+        }
+
+        /* Cameras Sidebar */
+        .camera-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(20, 30, 48, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .camera-container h3 {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .cam {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .cam:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+    </style>
+</head>
 
 <body onload="init()">
 
-  <button id="gauche" onclick="change_pos(1)">Equipe 1</button>
-  <button id="droite" onclick="change_pos(2)">Equipe 2</button>
-  <button class="cam" id="cam1" onclick="camera_n(1)">Caméra 1</button>
-  <button class="cam" id="cam2" onclick="camera_n(2)">Caméra 2</button>
-  <button class="cam" id="cam3" onclick="camera_n(3)">Caméra 3</button>
-  <button class="cam" id="cam4" onclick="camera_n(4)">Caméra 4</button>
+    <!-- UI -->
+    <div class="ui-layer interactive">
+        <table id="table">
+            <tr>
+                <th>Team</th>
+                <th>Score</th>
+            </tr>
+            <tr>
+                <td class="verte">Cyan</td>
+                <td class="verte" id="verte_score">0</td>
+            </tr>
+            <tr>
+                <td class="orange">Orange</td>
+                <td class="orange" id="orange_score">0</td>
+            </tr>
+        </table>
 
-  <div id="webgl"></div>
-    <p id="result"></p>
-  </div>
+        <div class="camera-container">
+            <h3>Camera Presets</h3>
+            <button class="cam" id="cam1" onclick="camera_n(1)">1: Overview</button>
+            <button class="cam" id="cam2" onclick="camera_n(2)">2: Action Follow</button>
+            <button class="cam" id="cam3" onclick="camera_n(3)">3: Side View</button>
+            <button class="cam" id="cam4" onclick="camera_n(4)">4: Top Down</button>
+        </div>
 
+        <div>
+            <button id="gauche" class="btn" onclick="change_pos(1)">THROW</button>
+            <button id="droite" class="btn" onclick="change_pos(2)">THROW</button>
+        </div>
+    </div>
 
+    <!-- 3D Canvas -->
+    <div id="webgl"></div>
 
-
-<style>
-  #table{
-    border:1px solid white;
-    background-color: none;
-    text-align: center;
-    position : fixed;
-    top : 15px;
-    left: 90px;
-    opacity: 0.9;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    font-size: 14px;
-  }
-  
-  #Equipe{
-    border:1px solid white;
-    color:white;
-  }
-  
-  #Score{
-    border:1px solid white;
-    color:white;
-  }
-  
-  .verte{
-    color: #40d200;
-    border:2px solid rgb(255, 197, 88);
-  }
-  
-  .orange{
-    color: rgb(255, 197, 88);
-    border:2px solid #40d200;
-  }
-</style>
-
-
-
-
-<!-- new table -->
-
-<table style="width:200px" id="table">
-  <tr>
-    <th id="Equipe">Equipe</th>
-    <th id="Score">Score</th>
-  </tr>
-  <tr>
-    <td class="verte">Verte</td>
-    <td class="verte" id="verte_score">0</td>
-  </tr>
-  <tr>
-    <td class="orange">Orange</td>
-    <td class="orange" id="orange_score">0</td>
-  </tr>
-</table>
-
-<!-- end of new table -->
-
-
-
-
+    <!-- Game Logic Scripts (Strict Ordering) -->
+    <script src="../js/Score.js"></script>
+    <script src="../js/CameraLumiere.js"></script>
+    <script src="../js/boule.js"></script>
+    <script src="../js/animation.js"></script>
+    <script src="../js/quille.js"></script>
+    <script src="../js/lignes_courbes.js"></script>
+    <script src="../js/Aleatoire.js"></script>
+    <script src="../js/init.js"></script>
 
 </body>
-
 </html>

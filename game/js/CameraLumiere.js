@@ -1,101 +1,63 @@
- var xDir=0;
- var yDir=0;
- var zDir=0.25;
-  
- function cameraLumiere(scene,camera){   // creation de la camera 
-  camera.up = new THREE.Vector3( 0, 0, 1 );
-  let xPos=3;
-  let yPos=3;
-  let zPos=3;
-  camera.position.set(xPos, yPos, zPos);
-  camera.lookAt(xDir, yDir, zDir);
-  camera.updateProjectionMatrix();
-} // fin fonction cameraLumiere
+// Lighting and Camera Setup
+let targetCamPos = new THREE.Vector3(35, 0, 4);
+let targetCamLook = new THREE.Vector3(0, 0, 0);
+let currentCamLook = new THREE.Vector3(0, 0, 0);
 
- 
-//*************************************************************
-//* 
-//        F I N     C A M E R A
-//
-//*************************************************************
+function cameraLumiere(scene, camera) {
+    camera.up = new THREE.Vector3(0, 0, 1);
+    camera.position.set(targetCamPos.x, targetCamPos.y, targetCamPos.z);
+    camera.lookAt(targetCamLook.x, targetCamLook.y, targetCamLook.z);
+    camera.updateProjectionMatrix();
+}
 
- function lumiere(scene){
-    let lumPt = new THREE.PointLight(0xffffff);
-    lumPt.position.set(-3,0,1);
-    lumPt.intensity = .5;
-    lumPt.shadow.camera.far=1;
-    lumPt.shadow.camera.near=1;
-    scene.add(lumPt);
-    let lumPt1 = new THREE.PointLight(0xffffff);
-    lumPt1.castShadow = true;
-    lumPt1.shadow.camera.far=1;
-    lumPt1.shadow.camera.near=1;
-    lumPt1.position.set(30,0,10);
-    lumPt1.intensity = 1.5;
-    scene.add(lumPt1);
+function updateCameraTransition() {
+    // Smooth camera lerp called in render loop
+    camera.position.lerp(targetCamPos, 0.05);
+    currentCamLook.lerp(targetCamLook, 0.05);
+    camera.lookAt(currentCamLook);
+}
 
-  // let am = new THREE.AmbientLight(0xffffff, 0.2);
-  // scene.add(am);
+function lumiere(scene) {
+    // Ambient Light to boost overall visibility across the whole room
+    let ambient = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambient);
 
-}// fin fonction lumiere
+    // Main Central Light (Ceiling Light)
+    let centralLight = new THREE.PointLight(0xffffff, 0.6, 100);
+    centralLight.position.set(10, 0, 15);
+    centralLight.castShadow = true;
+    centralLight.shadow.mapSize.width = 2048;
+    centralLight.shadow.mapSize.height = 2048;
+    scene.add(centralLight);
 
+    // Directional light from the front to light the pins clearly
+    let dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    dirLight.position.set(-10, 0, 10);
+    scene.add(dirLight);
+}
 
-
-
-
-
-
-
-
-
-function camera_n(i){
-  switch (i) {
-    case 1:
-      
-      camera.position.x = 35;
-      camera.position.y = 0;
-      camera.position.z = 4;
-      camera.lookAt(0, 0, 0);
-      camera.zoom = 1;
-      camera.updateProjectionMatrix();
-      
-      break;
-      
-      case 2:
-        
-        camera.position.x = 50;
-        camera.position.y = 0;
-        camera.position.z = 20;
-        camera.lookAt(0, 0,-1.6);
-        camera.zoom = 1;
-        camera.updateProjectionMatrix();
-
-      break;
-
-
-    case 3:
-  
-      camera.position.x = 11;
-      camera.position.y = 0;
-      camera.position.z = 50;
-      camera.lookAt(11, 0, 0);
-      camera.zoom = 1;
-      camera.updateProjectionMatrix();
-
-      break;
-      
-    case 4:
-    
-      camera.position.x = -8;
-      camera.position.y = 0;
-      camera.position.z = 3;
-      camera.lookAt(2, 0, 0);
-      camera.zoom = 0.5;
-      camera.updateProjectionMatrix();
-
-      break;
-  
-    default:
-      break;
-  }
+function camera_n(i) {
+    switch (i) {
+        case 1:
+            targetCamPos.set(35, 0, 4);
+            targetCamLook.set(0, 0, 0);
+            camera.zoom = 1;
+            break;
+        case 2:
+            targetCamPos.set(50, 0, 20);
+            targetCamLook.set(0, 0, -1.6);
+            camera.zoom = 1;
+            break;
+        case 3:
+            targetCamPos.set(11, 0, 50);
+            targetCamLook.set(11, 0, 0);
+            camera.zoom = 1;
+            break;
+        case 4:
+            targetCamPos.set(-8, 0, 3);
+            targetCamLook.set(2, 0, 0);
+            camera.zoom = 0.5;
+            break;
+    }
+    camera.updateProjectionMatrix();
 }
