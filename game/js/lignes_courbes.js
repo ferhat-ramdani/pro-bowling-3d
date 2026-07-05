@@ -55,12 +55,12 @@ function dessiner_traj_rect(equipe) {
         pts_lin_g = pts;
         effacer(lin_g);
         lin_g = cuisine_courbe(pts_lin_g, equipe_1_c);
-        scene.add(lin_g);
+        // scene.add(lin_g);
     } else if (equipe == 2) {
         pts_lin_d = pts;
         effacer(lin_d);
         lin_d = cuisine_courbe(pts_lin_d, equipe_2_c_bis);
-        scene.add(lin_d);
+        // scene.add(lin_d);
     }
 }
 

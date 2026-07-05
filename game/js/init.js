@@ -51,8 +51,8 @@ function init() {
     let wallMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x2a3b4c, roughness: 0.7 }), 0.8, 0.4);
     let floorMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.3, metalness: 0.1 }), 0.8, 0.4);
 
-    let plateforme = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 30, 1), wallMat, 0); // mass 0 = static
-    plateforme.position.set(7.5, 0, -0.5);
+    let plateforme = new Physijs.BoxMesh(new THREE.BoxGeometry(35, 30, 20), wallMat, 0); // mass 0 = static
+    plateforme.position.set(7.5, 0, -10);
     plateforme.receiveShadow = true;
     ajouter(plateforme);
 
@@ -125,7 +125,7 @@ function init() {
             type_traj_g = 'rect';
         } else if(menu_courbe.traj_gauche == 'non rect'){
             effacer(lin_g);
-            scene.add(bezier_g);
+            // scene.add(bezier_g);
             traj_gauche = pts_bezier_g;
             type_traj_g = 'non rect';
         }
@@ -139,7 +139,7 @@ function init() {
             type_traj_d = 'rect';
         } else if(menu_courbe.traj_droite == 'non rect'){
             effacer(lin_d);
-            scene.add(bezier_d);
+            // scene.add(bezier_d);
             traj_droite = pts_bezier_d;
             type_traj_d = 'non rect';
         }

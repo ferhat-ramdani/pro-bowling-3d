@@ -137,9 +137,10 @@ function sweepFallenPins(team) {
             mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
             
             animators.push(() => {
-                mesh.position.z -= 0.1;
+                // Sweep the pins backwards off the lane instead of sinking them into the floor!
+                mesh.position.x -= 0.3;
                 mesh.__dirtyPosition = true;
-                if (mesh.position.z < -2) {
+                if (mesh.position.x < -12) {
                     scene.remove(mesh);
                     return true;
                 }

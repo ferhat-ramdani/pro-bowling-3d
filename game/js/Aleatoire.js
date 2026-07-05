@@ -53,11 +53,11 @@ setTimeout(() => {
     pts_bezier_g = gData[0];
     bezier_g = gData[1];
 
-    scene.add(bezier_d);
+    // scene.add(bezier_d);
     traj_droite = pts_bezier_d;
     type_traj_d = 'non rect';
 
-    scene.add(bezier_g);
+    // scene.add(bezier_g);
     traj_gauche = pts_bezier_g;
     type_traj_g = 'non rect';
 }, 1000);
