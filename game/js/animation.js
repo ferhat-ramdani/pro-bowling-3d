@@ -70,8 +70,29 @@ function bouger(obj, points, equipe) {
         // If ball passed the pins (x < -2) or fell off the edge (z < -1)
         if (obj.position.x < -2 || obj.position.z < -1) {
 
-            // Wait an extra 1.5s for pins to finish scattering and falling
-            setTimeout(() => {
+            // Dynamic Physics Wait: Wait for pins to completely stop moving
+            let evaluateTimer = 0;
+            let settleAnimator = () => {
+                evaluateTimer++;
+                let allPins = equipe === 1 ? allSpawnedPins1 : allSpawnedPins2;
+                let isMoving = false;
+                
+                // Check if any pin is still moving significantly
+                for (let i = 0; i < allPins.length; i++) {
+                    let v = allPins[i].getLinearVelocity();
+                    let a = allPins[i].getAngularVelocity();
+                    if (v.lengthSq() > 0.1 || a.lengthSq() > 0.1) {
+                        isMoving = true;
+                        break;
+                    }
+                }
+
+                // Force wait at least 30 frames (0.5s) to allow physics to start.
+                // Wait until they stop moving, with a fallback timeout of 240 frames (4s).
+                if ((isMoving && evaluateTimer < 240) || evaluateTimer < 30) {
+                    return false; // keep checking next frame
+                }
+
                 // Evaluate fallen pins physically!
                 let standingArr = equipe === 1 ? quilles1 : quilles2;
                 let remainingStanding = [];
@@ -146,7 +167,10 @@ function bouger(obj, points, equipe) {
                     document.getElementById("droite").disabled = false;
                     pos = 0;
                 }, 1000);
-            }, 1500); // Give it 1.5 seconds to scatter
+                
+                return true; // remove from animators
+            };
+            animators.push(settleAnimator);
 
             return true; // Done, remove from animators
         }

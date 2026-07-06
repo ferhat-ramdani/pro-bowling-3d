@@ -79,7 +79,7 @@ function cuisiner_quille(x, y, resolution, couleur) {
 const physPinMaterial = Physijs.createMaterial(pinMaterial, 0.4, 0.2); // friction 0.4, restitution 0.2 (low bounce to prevent endless wobbling)
 
 function dessiner_quille_bis(x, y, resolution, couleur) {
-    let pin = new Physijs.ConvexMesh(pinGeometry, physPinMaterial, 4.0); // ConvexMesh perfectly matches the Z-up geometry! Increased mass to 4.0
+    let pin = new Physijs.ConvexMesh(pinGeometry, physPinMaterial, 2.0); // ConvexMesh perfectly matches the Z-up geometry! Decreased mass to 2.0
     // The geometry is centered at Z=0. Since half height is 1, placing it at Z=1.1 means base is at Z=0.1
     pin.position.set(x, y, 1.1); 
     pin.setDamping(0.1, 0.6); // High angular damping forces it to settle and stop wobbling immediately

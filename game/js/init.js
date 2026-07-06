@@ -3,7 +3,7 @@ Physijs.scripts.ammo = 'ammo.js';
 
 let camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
 let scene = new Physijs.Scene({ fixedTimeStep: 1 / 60 });
-scene.setGravity(new THREE.Vector3( 0, 0, -9.8 ));
+scene.setGravity(new THREE.Vector3( 0, 0, -50.0 ));
 let traj_gauche;
 let traj_droite;
 let type_traj_d;
