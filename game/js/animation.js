@@ -1,11 +1,36 @@
 let animators = [];
-let standingPins1 = [];
-let standingPins2 = [];
+let isBallRolling = { 1: false, 2: false };
+let isSwiping = false;
+let swipeStartPos = new THREE.Vector2();
+let swipeEndPos = new THREE.Vector2();
+let swipeStartTime = 0;
+let swipeMidPos = new THREE.Vector2();
+let activeTeam = null;
 
-setTimeout(() => {
-    standingPins1 = initialPinLayouts[0] ? [...initialPinLayouts[0]] : [];
-    standingPins2 = initialPinLayouts[1] ? [...initialPinLayouts[1]] : [];
-}, 1000);
+let raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
+
+function isPinsMoving(pm) {
+    for (let i = 0; i < pm.allSpawnedPins.length; i++) {
+        let v = pm.allSpawnedPins[i].getLinearVelocity();
+        let a = pm.allSpawnedPins[i].getAngularVelocity();
+        if (v.lengthSq() > 0.1 || a.lengthSq() > 0.1) return true;
+    }
+    return false;
+}
+
+function getRemainingStandingPins(pm) {
+    let remainingStanding = [];
+    for (let i = 0; i < pm.standingPins.length; i++) {
+        let pinObj = pm.standingPins[i];
+        let mesh = pinObj.pin;
+        let upDir = new THREE.Vector3(0, 0, 1).applyQuaternion(mesh.quaternion);
+        let isFallen = upDir.z < 0.8 || mesh.position.z < 0;
+        if (!isFallen) remainingStanding.push(pinObj);
+    }
+    return remainingStanding;
+}
+
 
 // Unified render loop
 function animateLoop() {
@@ -28,6 +53,8 @@ function distance(p1, p2) {
 
 function throwBall(team, vx, vy, hookSpin) {
     let obj = team === 1 ? cyanBall : redBall;
+    if (!obj) return;
+
     let x0 = obj.position.x;
     let y0 = obj.position.y;
 
@@ -47,39 +74,14 @@ function throwBall(team, vx, vy, hookSpin) {
             let evaluateTimer = 0;
             let settleAnimator = () => {
                 evaluateTimer++;
-                let allPins = team === 1 ? allSpawnedPins1 : allSpawnedPins2;
-                let isMoving = false;
+                let pm = team === 1 ? pm1 : pm2;
                 
-                for (let i = 0; i < allPins.length; i++) {
-                    let v = allPins[i].getLinearVelocity();
-                    let a = allPins[i].getAngularVelocity();
-                    if (v.lengthSq() > 0.1 || a.lengthSq() > 0.1) {
-                        isMoving = true;
-                        break;
-                    }
-                }
-
-                if ((isMoving && evaluateTimer < 240) || evaluateTimer < 30) {
+                if ((isPinsMoving(pm) && evaluateTimer < 240) || evaluateTimer < 30) {
                     return false;
                 }
 
-                let standingArr = team === 1 ? standingPins1 : standingPins2;
-                let remainingStanding = [];
-
-                for (let i = 0; i < standingArr.length; i++) {
-                    let pinObj = standingArr[i];
-                    let mesh = pinObj.pin;
-
-                    let upDir = new THREE.Vector3(0, 0, 1).applyQuaternion(mesh.quaternion);
-                    let isFallen = upDir.z < 0.8 || mesh.position.z < 0;
-
-                    if (!isFallen) {
-                        remainingStanding.push(pinObj);
-                    }
-                }
-
-                if (team === 1) standingPins1 = remainingStanding;
-                else standingPins2 = remainingStanding;
+                let remainingStanding = getRemainingStandingPins(pm);
+                pm.standingPins = remainingStanding;
 
                 obj.setLinearVelocity(new THREE.Vector3(0, 0, 0));
                 obj.setAngularVelocity(new THREE.Vector3(0, 0, 0));
@@ -97,8 +99,7 @@ function throwBall(team, vx, vy, hookSpin) {
                 }
 
                 setTimeout(() => {
-                    if (team === 1) isBallRolling1 = false;
-                    else if (team === 2) isBallRolling2 = false;
+                    isBallRolling[team] = false;
                 }, 1000);
                 
                 return true;
@@ -116,21 +117,6 @@ function addMeshToScene(obj) {
     scene.add(obj);
 }
 
-// ---------------------------------------------------------
-// SWIPE INTERACTION & RAYCASTING
-// ---------------------------------------------------------
-let isBallRolling1 = false;
-let isBallRolling2 = false;
-let isSwiping = false;
-let swipeStartPos = new THREE.Vector2();
-let swipeEndPos = new THREE.Vector2();
-let swipeStartTime = 0;
-let swipeMidPos = new THREE.Vector2();
-let activeTeam = null;
-
-let raycaster = new THREE.Raycaster();
-let mouse = new THREE.Vector2();
-
 function getNormalizedCoords(clientX, clientY) {
     mouse.x = (clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(clientY / window.innerHeight) * 2 + 1;
@@ -141,16 +127,19 @@ function handleSwipeStart(clientX, clientY) {
     let coords = getNormalizedCoords(clientX, clientY);
     raycaster.setFromCamera(coords, camera);
 
-    let ballMeshes = [cyanBall.children[0], redBall.children[0]]; 
+    let ballMeshes = [];
+    if (cyanBall) ballMeshes.push(cyanBall.children[0]);
+    if (redBall) ballMeshes.push(redBall.children[0]);
+    
     let intersects = raycaster.intersectObjects(ballMeshes, false);
     
     if (intersects.length > 0) {
         let hitObj = intersects[0].object.parent;
         if (hitObj === cyanBall) {
-            if (isBallRolling1) return;
+            if (isBallRolling[1]) return;
             activeTeam = 1;
         } else if (hitObj === redBall) {
-            if (isBallRolling2) return;
+            if (isBallRolling[2]) return;
             activeTeam = 2;
         }
         
@@ -239,8 +228,7 @@ function handleSwipeEnd(clientX, clientY) {
     if (hookSpin > 30) hookSpin = 30;
     if (hookSpin < -30) hookSpin = -30;
 
-    if (activeTeam === 1) isBallRolling1 = true;
-    else if (activeTeam === 2) isBallRolling2 = true;
+    isBallRolling[activeTeam] = true;
 
     throwBall(activeTeam, vx, vy, hookSpin);
     activeTeam = null;

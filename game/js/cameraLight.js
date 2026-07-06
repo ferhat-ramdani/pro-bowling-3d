@@ -1,4 +1,3 @@
-// Lighting and Camera Setup
 let targetCamPos = new THREE.Vector3(70, 0, 7);
 let targetCamLook = new THREE.Vector3(0, 0, 0);
 let currentCamLook = new THREE.Vector3(0, 0, 0);
@@ -16,44 +15,37 @@ function updateCameraTransition() {
     camera.lookAt(currentCamLook);
 }
 
-function setupLighting(scene) {
-    // Ambient Light
-    let ambient = new THREE.AmbientLight(0xffffff, 0.8);
+function createSpotlight(x, y, z, targetY, scene) {
+    let spot = new THREE.SpotLight(0xffffff, 4.0);
+    spot.position.set(x, y, z);
+    spot.target.position.set(0, targetY, 0);
+    spot.angle = Math.PI / 6;
+    spot.penumbra = 0.5;
+    spot.castShadow = true;
+    scene.add(spot);
+    scene.add(spot.target);
+    return spot;
+}
+
+function setupLighting(scene, players) {
+    let ambient = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambient);
 
-    // Main Central Light
-    let centralLight = new THREE.PointLight(0xffffff, 1.5, 100);
-    centralLight.position.set(10, 0, 15);
+    let centralLight = new THREE.PointLight(0xffffff, 0.6, 200);
+    centralLight.position.set(20, 0, 30);
     centralLight.castShadow = true;
     centralLight.shadow.mapSize.width = 2048;
     centralLight.shadow.mapSize.height = 2048;
     scene.add(centralLight);
 
-    // Front Directional Light
-    let dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    dirLight.position.set(-10, 0, 10);
+    let dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(-10, 0, 20);
     scene.add(dirLight);
 
-    // Spotlight Left Lane
-    let spotLeft = new THREE.SpotLight(0xffffff, 7.0);
-    spotLeft.position.set(10, -6, 15);
-    spotLeft.target.position.set(0, -6, 0);
-    spotLeft.angle = Math.PI / 6; 
-    spotLeft.penumbra = 0.5; 
-    spotLeft.castShadow = true;
-    scene.add(spotLeft);
-    scene.add(spotLeft.target);
-
-    // Spotlight Right Lane
-    let spotRight = new THREE.SpotLight(0xffffff, 7.0);
-    spotRight.position.set(10, 6, 15);
-    spotRight.target.position.set(0, 6, 0);
-    spotRight.angle = Math.PI / 6;
-    spotRight.penumbra = 0.5;
-    spotRight.castShadow = true;
-    scene.add(spotRight);
-    scene.add(spotRight.target);
-}
-
-function setCameraPos(i) {
+    if (players === 1) {
+        createSpotlight(10, 0, 15, 0, scene);
+    } else {
+        createSpotlight(10, -6, 15, -6, scene);
+        createSpotlight(10, 6, 15, 6, scene);
+    }
 }

@@ -129,5 +129,14 @@ function createBall(x0, y0, ballColor, decorColor) {
 let team1Color = 0x00e5ff; 
 let team2Color = 0xff0022; 
 
-let cyanBall = createBall(45, -6, team1Color, 0xffffff);
-let redBall = createBall(45, 6, team2Color, 0xffffff);
+let cyanBall = null;
+let redBall = null;
+
+function initBalls(players) {
+    if (players === 1) {
+        cyanBall = createBall(45, 0, team1Color, 0xffffff);
+    } else {
+        cyanBall = createBall(45, -6, team1Color, 0xffffff);
+        redBall = createBall(45, 6, team2Color, 0xffffff);
+    }
+}
