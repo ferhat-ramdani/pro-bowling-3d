@@ -119,7 +119,8 @@ function throwBall(team, vx, vy, hookSpin) {
 
                 // Wait 1s for sweep/reset to finish before enabling throws again
                 setTimeout(() => {
-                    isBallRolling = false;
+                    if (team === 1) isBallRolling1 = false;
+                    else if (team === 2) isBallRolling2 = false;
                 }, 1000);
                 
                 return true; // remove from animators
@@ -140,7 +141,8 @@ function addMeshToScene(obj) {
 // ---------------------------------------------------------
 // SWIPE INTERACTION & RAYCASTING
 // ---------------------------------------------------------
-let isBallRolling = false;
+let isBallRolling1 = false;
+let isBallRolling2 = false;
 let isSwiping = false;
 let swipeStartPos = new THREE.Vector2();
 let swipeEndPos = new THREE.Vector2();
@@ -158,8 +160,6 @@ function getNormalizedCoords(clientX, clientY) {
 }
 
 function handleSwipeStart(clientX, clientY) {
-    if (isBallRolling) return;
-
     let coords = getNormalizedCoords(clientX, clientY);
     raycaster.setFromCamera(coords, camera);
 
@@ -171,8 +171,10 @@ function handleSwipeStart(clientX, clientY) {
     if (intersects.length > 0) {
         let hitObj = intersects[0].object.parent; // Get the Physijs sphere parent
         if (hitObj === cyanBall) {
+            if (isBallRolling1) return; // This ball is already rolling
             activeTeam = 1;
         } else if (hitObj === redBall) {
+            if (isBallRolling2) return; // This ball is already rolling
             activeTeam = 2;
         }
         
@@ -275,7 +277,9 @@ function handleSwipeEnd(clientX, clientY) {
     if (hookSpin > 30) hookSpin = 30;
     if (hookSpin < -30) hookSpin = -30;
 
-    isBallRolling = true;
+    if (activeTeam === 1) isBallRolling1 = true;
+    else if (activeTeam === 2) isBallRolling2 = true;
+
     throwBall(activeTeam, vx, vy, hookSpin);
     activeTeam = null;
 }
