@@ -10,11 +10,9 @@ let finger2Pos, finger2Rot;
 function getBowlingBallGeometry() {
     if (sharedBowlingBallGeometry) return sharedBowlingBallGeometry;
 
-    // Use 32x32 to avoid ThreeBSP stack overflow, smooth shading will make it look round
     let sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, 32, 32));
     let sphereBSP = new ThreeBSP(sphereMesh);
 
-    // Thumb hole (Bigger)
     let thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.4, 16));
     thumb.position.set(0, -0.15, ballRadius - 0.1);
     thumb.rotation.x = Math.PI / 2 + Math.asin(0.15 / ballRadius);
@@ -22,7 +20,6 @@ function getBowlingBallGeometry() {
     thumbPos = thumb.position.clone();
     thumbRot = thumb.rotation.clone();
     
-    // Finger 1 (Bigger)
     let finger1 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.04, 0.4, 16));
     finger1.position.set(-0.12, 0.15, ballRadius - 0.1);
     finger1.rotation.x = Math.PI / 2 - Math.asin(0.15 / ballRadius);
@@ -31,7 +28,6 @@ function getBowlingBallGeometry() {
     finger1Pos = finger1.position.clone();
     finger1Rot = finger1.rotation.clone();
     
-    // Finger 2 (Bigger)
     let finger2 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.04, 0.4, 16));
     finger2.position.set(0.12, 0.15, ballRadius - 0.1);
     finger2.rotation.x = Math.PI / 2 - Math.asin(0.15 / ballRadius);
@@ -40,7 +36,6 @@ function getBowlingBallGeometry() {
     finger2Pos = finger2.position.clone();
     finger2Rot = finger2.rotation.clone();
 
-    // Subtract holes from sphere
     let resultBSP = sphereBSP
         .subtract(new ThreeBSP(thumb))
         .subtract(new ThreeBSP(finger1))
@@ -53,26 +48,23 @@ function getBowlingBallGeometry() {
     return sharedBowlingBallGeometry;
 }
 
-// We use modern shiny materials for the balls, now with realistic finger holes!
 function createBall(x0, y0, ballColor, decorColor) {
     let visualGeom = getBowlingBallGeometry();
     
-    // Smooth physical sphere wrapper so collision isn't bumpy
     let physMaterial = Physijs.createMaterial(
         new THREE.MeshBasicMaterial({ visible: false }), 
-        0.6, // friction
-        0.5  // restitution
+        0.6, 
+        0.5  
     );
 
     let sphereG = new THREE.SphereGeometry(ballRadius, 32, 32);
-    let ball = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); // 7.0 kg mass
+    let ball = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); 
     
-    // The visual mesh with holes (smoother and shinier)
     let visualMat = new THREE.MeshPhysicalMaterial({
         color: ballColor,
         roughness: 0.3,
         metalness: 0.1,
-        clearcoat: 1.0, // High-end realistic clearcoat gloss
+        clearcoat: 1.0, 
         clearcoatRoughness: 0.05
     });
     
@@ -80,8 +72,6 @@ function createBall(x0, y0, ballColor, decorColor) {
     visualMesh.castShadow = true;
     visualMesh.receiveShadow = true;
     
-    // Create dark inside walls for the holes using BackSide cylinders
-    // Sunk into the holes so they don't protrude!
     let darkMat = new THREE.MeshStandardMaterial({
         color: 0x010101,
         roughness: 0.9,
@@ -92,7 +82,7 @@ function createBall(x0, y0, ballColor, decorColor) {
     let innerThumb = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.058, 0.24, 16), darkMat);
     innerThumb.position.copy(thumbPos);
     innerThumb.rotation.copy(thumbRot);
-    innerThumb.translateY(-0.08); // Sink it deep into the hole!
+    innerThumb.translateY(-0.08); 
     visualMesh.add(innerThumb);
     
     let innerFinger1 = new THREE.Mesh(new THREE.CylinderGeometry(0.053, 0.038, 0.24, 16), darkMat);
@@ -107,29 +97,27 @@ function createBall(x0, y0, ballColor, decorColor) {
     innerFinger2.translateY(-0.08);
     visualMesh.add(innerFinger2);
 
-    // Create rounded bevels at the rim of the holes using TorusGeometry
     let rimThumb = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.008, 16, 32), visualMat);
     rimThumb.position.copy(thumbPos);
     rimThumb.rotation.copy(thumbRot);
-    rimThumb.rotateX(Math.PI / 2); // Align torus Z-axis with cylinder Y-axis
-    rimThumb.translateZ(0.08); // Push outward to surface
+    rimThumb.rotateX(Math.PI / 2); 
+    rimThumb.translateZ(0.08); 
     visualMesh.add(rimThumb);
 
     let rimFinger1 = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.008, 16, 32), visualMat);
     rimFinger1.position.copy(finger1Pos);
     rimFinger1.rotation.copy(finger1Rot);
     rimFinger1.rotateX(Math.PI / 2);
-    rimFinger1.translateZ(0.065); // Push outward to surface
+    rimFinger1.translateZ(0.065); 
     visualMesh.add(rimFinger1);
 
     let rimFinger2 = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.008, 16, 32), visualMat);
     rimFinger2.position.copy(finger2Pos);
     rimFinger2.rotation.copy(finger2Rot);
     rimFinger2.rotateX(Math.PI / 2);
-    rimFinger2.translateZ(0.065); // Push outward to surface
+    rimFinger2.translateZ(0.065); 
     visualMesh.add(rimFinger2);
     
-    // Rotate visual mesh so holes face the camera (+X axis) instead of up (+Z)
     visualMesh.rotation.y = Math.PI / 2;
     
     ball.add(visualMesh);
@@ -138,10 +126,8 @@ function createBall(x0, y0, ballColor, decorColor) {
     return ball;
 }
 
-// Improved Team Colors
-let team1Color = 0x00e5ff; // Electric Cyan
-let team2Color = 0xff0022; // Vibrant Professional Red
+let team1Color = 0x00e5ff; 
+let team2Color = 0xff0022; 
 
-// Expose them globally for init.js
 let cyanBall = createBall(45, -6, team1Color, 0xffffff);
 let redBall = createBall(45, 6, team2Color, 0xffffff);

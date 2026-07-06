@@ -123,7 +123,6 @@ function processThrow(team, remainingPinsCount) {
             result = { action: 'reset' };
         }
     } else {
-        // Frame 10
         if (state.currentThrow === 1) {
             if (knockedDown === 10) {
                 f.t1 = 'X';
@@ -181,5 +180,4 @@ function processThrow(team, remainingPinsCount) {
     return result;
 }
 
-// Call init when script loads
 initScoreboard();

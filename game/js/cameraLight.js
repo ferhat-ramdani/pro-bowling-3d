@@ -11,7 +11,6 @@ function setupCamera(scene, camera) {
 }
 
 function updateCameraTransition() {
-    // Smooth camera lerp called in render loop
     camera.position.lerp(targetCamPos, 0.05);
     currentCamLook.lerp(targetCamLook, 0.05);
     camera.lookAt(currentCamLook);
@@ -22,7 +21,7 @@ function setupLighting(scene) {
     let ambient = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambient);
 
-    // Main Central Light (Ceiling Light)
+    // Main Central Light
     let centralLight = new THREE.PointLight(0xffffff, 1.5, 100);
     centralLight.position.set(10, 0, 15);
     centralLight.castShadow = true;
@@ -30,22 +29,22 @@ function setupLighting(scene) {
     centralLight.shadow.mapSize.height = 2048;
     scene.add(centralLight);
 
-    // Directional light from the front to light the pins clearly
+    // Front Directional Light
     let dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
     dirLight.position.set(-10, 0, 10);
     scene.add(dirLight);
 
-    // Dramatic Spotlight for Left Lane Pins
+    // Spotlight Left Lane
     let spotLeft = new THREE.SpotLight(0xffffff, 7.0);
     spotLeft.position.set(10, -6, 15);
     spotLeft.target.position.set(0, -6, 0);
-    spotLeft.angle = Math.PI / 6; // Narrow beam
-    spotLeft.penumbra = 0.5; // Soft edges
+    spotLeft.angle = Math.PI / 6; 
+    spotLeft.penumbra = 0.5; 
     spotLeft.castShadow = true;
     scene.add(spotLeft);
     scene.add(spotLeft.target);
 
-    // Dramatic Spotlight for Right Lane Pins
+    // Spotlight Right Lane
     let spotRight = new THREE.SpotLight(0xffffff, 7.0);
     spotRight.position.set(10, 6, 15);
     spotRight.target.position.set(0, 6, 0);
@@ -57,6 +56,4 @@ function setupLighting(scene) {
 }
 
 function setCameraPos(i) {
-    // The user requested ONE static camera position, so we disable all dynamic camera shifting.
-    // The camera will remain locked at the position defined above.
 }

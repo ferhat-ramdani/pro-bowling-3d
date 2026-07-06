@@ -18,7 +18,7 @@ function init() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize(window.innerWidth, window.innerHeight);
-    scene.background = new THREE.Color(0x0a0e1a); // Dark navy room
+    scene.background = new THREE.Color(0x0a0e1a);
     scene.fog = new THREE.FogExp2(0x0a0e1a, 0.02);
 
     window.addEventListener('resize', function() {
@@ -30,23 +30,17 @@ function init() {
     setupCamera(scene, camera);
     setupLighting(scene);
 
-    // ********************************************************
-    // G E O M E T R I C   P A R T
-    // ********************************************************
-
     addMeshToScene(cyanBall);
     addMeshToScene(redBall);
 
-    // Professional pin spacing (equilateral triangle, ~12 inches between pins)
-    placePins(0, -6, 1.0, 1.15); // Left lane
-    placePins(0, 6, 1.0, 1.15); // Right lane
+    placePins(0, -6, 1.0, 1.15);
+    placePins(0, 6, 1.0, 1.15);
 
-    // Walls and Lanes (Using modern Box/Plane Geometries)
     let wallMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x2a3b4c, roughness: 0.7 }), 0.8, 0.4);
     let floorMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x3d2b1f, roughness: 0.3, metalness: 0.1 }), 0.8, 0.4);
     let bumperMat = Physijs.createMaterial(new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 }), 0.8, 0.4);
 
-    let platform = new Physijs.BoxMesh(new THREE.BoxGeometry(80, 40, 20), wallMat, 0); // mass 0 = static
+    let platform = new Physijs.BoxMesh(new THREE.BoxGeometry(80, 40, 20), wallMat, 0);
     platform.position.set(25, 0, -10);
     platform.receiveShadow = true;
     addMeshToScene(platform);
@@ -63,7 +57,6 @@ function init() {
     rightWall.position.set(25, 20.5, 7.5);
     addMeshToScene(rightWall);
 
-    // Expanded professional lanes
     let leftLane = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 6.0, 2.0), floorMat, 0);
     leftLane.position.set(24, -6, -0.9);
     leftLane.receiveShadow = true;
@@ -74,29 +67,24 @@ function init() {
     rightLane.receiveShadow = true;
     addMeshToScene(rightLane);
 
-    // Guardrails (Bumpers) for left lane
     let glLeft = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
     glLeft.position.set(24, -9.25, 0.35);
     addMeshToScene(glLeft);
+    
     let glRight = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
     glRight.position.set(24, -2.75, 0.35);
     addMeshToScene(glRight);
 
-    // Guardrails (Bumpers) for right lane
     let grLeft = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
     grLeft.position.set(24, 2.75, 0.35);
     addMeshToScene(grLeft);
+    
     let grRight = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 0.5, 0.5), bumperMat, 0);
     grRight.position.set(24, 9.25, 0.35);
     addMeshToScene(grRight);
 
-    // ********************************************************
-    // M E N U   G U I
-    // ********************************************************
-
     let gui = new dat.GUI();
 
-    // Camera Menu
     let menu = new function() {
         this.xPos = targetCamPos.x;
         this.yPos = targetCamPos.y;
@@ -118,10 +106,6 @@ function init() {
     cam.add(menu, "xDir", -40, 40).onChange(function () { targetCamLook.x = menu.xDir; });
     cam.add(menu, "yDir", -40, 40).onChange(function () { targetCamLook.y = menu.yDir; });
     cam.add(menu, "zDir", -40, 40).onChange(function () { targetCamLook.z = menu.zDir; });
-
-    // ********************************************************
-    // E N D   M E N U   G U I
-    // ********************************************************
 
     document.getElementById("webgl").appendChild(renderer.domElement);
     
