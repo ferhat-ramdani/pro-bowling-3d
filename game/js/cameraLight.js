@@ -3,7 +3,7 @@ let targetCamPos = new THREE.Vector3(70, 0, 7);
 let targetCamLook = new THREE.Vector3(0, 0, 0);
 let currentCamLook = new THREE.Vector3(0, 0, 0);
 
-function cameraLumiere(scene, camera) {
+function setupCamera(scene, camera) {
     camera.up = new THREE.Vector3(0, 0, 1);
     camera.position.set(targetCamPos.x, targetCamPos.y, targetCamPos.z);
     camera.lookAt(targetCamLook.x, targetCamLook.y, targetCamLook.z);
@@ -17,13 +17,13 @@ function updateCameraTransition() {
     camera.lookAt(currentCamLook);
 }
 
-function lumiere(scene) {
+function setupLighting(scene) {
     // Ambient Light
-    let ambient = new THREE.AmbientLight(0xffffff, 0.8); // Restored contrast by reducing from 2.0 to 0.8
+    let ambient = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambient);
 
     // Main Central Light (Ceiling Light)
-    let centralLight = new THREE.PointLight(0xffffff, 1.5, 100); // Brighter central light
+    let centralLight = new THREE.PointLight(0xffffff, 1.5, 100);
     centralLight.position.set(10, 0, 15);
     centralLight.castShadow = true;
     centralLight.shadow.mapSize.width = 2048;
@@ -31,12 +31,12 @@ function lumiere(scene) {
     scene.add(centralLight);
 
     // Directional light from the front to light the pins clearly
-    let dirLight = new THREE.DirectionalLight(0xffffff, 1.2); // Brighter directional light
+    let dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
     dirLight.position.set(-10, 0, 10);
     scene.add(dirLight);
 
     // Dramatic Spotlight for Left Lane Pins
-    let spotLeft = new THREE.SpotLight(0xffffff, 7.0); // Bright intensity
+    let spotLeft = new THREE.SpotLight(0xffffff, 7.0);
     spotLeft.position.set(10, -6, 15);
     spotLeft.target.position.set(0, -6, 0);
     spotLeft.angle = Math.PI / 6; // Narrow beam
@@ -46,7 +46,7 @@ function lumiere(scene) {
     scene.add(spotLeft.target);
 
     // Dramatic Spotlight for Right Lane Pins
-    let spotRight = new THREE.SpotLight(0xffffff, 7.0); // Bright intensity
+    let spotRight = new THREE.SpotLight(0xffffff, 7.0);
     spotRight.position.set(10, 6, 15);
     spotRight.target.position.set(0, 6, 0);
     spotRight.angle = Math.PI / 6;
@@ -56,7 +56,7 @@ function lumiere(scene) {
     scene.add(spotRight.target);
 }
 
-function camera_n(i) {
+function setCameraPos(i) {
     // The user requested ONE static camera position, so we disable all dynamic camera shifting.
     // The camera will remain locked at the position defined above.
 }

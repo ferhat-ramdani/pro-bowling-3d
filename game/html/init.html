@@ -25,6 +25,10 @@
             background-color: #0a0e1a;
             font-family: 'Inter', sans-serif;
             color: white;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         #webgl {
@@ -176,60 +180,6 @@
         .spare-text { color: #00e5ff; }
         .open-text { color: #ffffff; }
 
-        /* Controls positioning */
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 800;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            box-shadow: none !important;
-        }
-        
-        #gauche {
-            position: absolute;
-            bottom: 60px;
-            left: 25%;
-            transform: translateX(-50%);
-            background-color: #00e5ff;
-            color: #0a0e1a;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-            z-index: 100;
-        }
-
-        #gauche:hover:not(:disabled) {
-            background-color: #00b3cc;
-            transform: translate(-50%, -2px);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-        }
-
-        #droite {
-            position: absolute;
-            bottom: 60px;
-            right: 25%;
-            transform: translateX(50%);
-            background-color: #ff0022;
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 0, 34, 0.3);
-            z-index: 100;
-        }
-
-        #droite:hover:not(:disabled) {
-            background-color: #cc001b;
-            transform: translate(50%, -2px);
-            box-shadow: 0 0 20px rgba(255, 0, 34, 0.5);
-        }
-
     </style>
 </head>
 
@@ -254,27 +204,18 @@
         <div id="announce-banner">
             <h1 id="announce-text">STRIKE!</h1>
         </div>
-
-        <!-- Cameras removed per request -->
-
-        <div>
-            <button id="gauche" class="btn" onclick="change_pos(1)">THROW</button>
-            <button id="droite" class="btn" onclick="change_pos(2)">THROW</button>
-        </div>
     </div>
 
     <!-- 3D Canvas -->
     <div id="webgl"></div>
 
     <!-- Game Logic Scripts (Strict Ordering) -->
-    <script src="../js/Score.js?v=12"></script>
-    <script src="../js/CameraLumiere.js?v=12"></script>
-    <script src="../js/boule.js?v=12"></script>
-    <script src="../js/animation.js?v=12"></script>
-    <script src="../js/quille.js?v=12"></script>
-    <script src="../js/lignes_courbes.js?v=12"></script>
-    <script src="../js/Aleatoire.js?v=12"></script>
-    <script src="../js/init.js?v=12"></script>
+    <script src="../js/Score.js?v=13"></script>
+    <script src="../js/cameraLight.js?v=13"></script>
+    <script src="../js/ball.js?v=13"></script>
+    <script src="../js/animation.js?v=13"></script>
+    <script src="../js/pin.js?v=13"></script>
+    <script src="../js/init.js?v=13"></script>
 
 </body>
 </html>

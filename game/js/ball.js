@@ -1,4 +1,4 @@
-let R = 0.55;
+let ballRadius = 0.55;
 let ep = 0.005;
 
 let sharedBowlingBallGeometry = null;
@@ -11,31 +11,31 @@ function getBowlingBallGeometry() {
     if (sharedBowlingBallGeometry) return sharedBowlingBallGeometry;
 
     // Use 32x32 to avoid ThreeBSP stack overflow, smooth shading will make it look round
-    let sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(R, 32, 32));
+    let sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, 32, 32));
     let sphereBSP = new ThreeBSP(sphereMesh);
 
     // Thumb hole (Bigger)
     let thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.4, 16));
-    thumb.position.set(0, -0.15, R - 0.1);
-    thumb.rotation.x = Math.PI / 2 + Math.asin(0.15 / R);
+    thumb.position.set(0, -0.15, ballRadius - 0.1);
+    thumb.rotation.x = Math.PI / 2 + Math.asin(0.15 / ballRadius);
     
     thumbPos = thumb.position.clone();
     thumbRot = thumb.rotation.clone();
     
     // Finger 1 (Bigger)
     let finger1 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.04, 0.4, 16));
-    finger1.position.set(-0.12, 0.15, R - 0.1);
-    finger1.rotation.x = Math.PI / 2 - Math.asin(0.15 / R);
-    finger1.rotation.y = Math.asin(-0.12 / R);
+    finger1.position.set(-0.12, 0.15, ballRadius - 0.1);
+    finger1.rotation.x = Math.PI / 2 - Math.asin(0.15 / ballRadius);
+    finger1.rotation.y = Math.asin(-0.12 / ballRadius);
     
     finger1Pos = finger1.position.clone();
     finger1Rot = finger1.rotation.clone();
     
     // Finger 2 (Bigger)
     let finger2 = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.04, 0.4, 16));
-    finger2.position.set(0.12, 0.15, R - 0.1);
-    finger2.rotation.x = Math.PI / 2 - Math.asin(0.15 / R);
-    finger2.rotation.y = Math.asin(0.12 / R);
+    finger2.position.set(0.12, 0.15, ballRadius - 0.1);
+    finger2.rotation.x = Math.PI / 2 - Math.asin(0.15 / ballRadius);
+    finger2.rotation.y = Math.asin(0.12 / ballRadius);
     
     finger2Pos = finger2.position.clone();
     finger2Rot = finger2.rotation.clone();
@@ -54,7 +54,7 @@ function getBowlingBallGeometry() {
 }
 
 // We use modern shiny materials for the balls, now with realistic finger holes!
-function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
+function createBall(x0, y0, ballColor, decorColor) {
     let visualGeom = getBowlingBallGeometry();
     
     // Smooth physical sphere wrapper so collision isn't bumpy
@@ -64,12 +64,12 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
         0.5  // restitution
     );
 
-    let sphereG = new THREE.SphereGeometry(R, 32, 32);
-    let boule = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); // 7.0 kg mass
+    let sphereG = new THREE.SphereGeometry(ballRadius, 32, 32);
+    let ball = new Physijs.SphereMesh(sphereG, physMaterial, 7.0); // 7.0 kg mass
     
     // The visual mesh with holes (smoother and shinier)
     let visualMat = new THREE.MeshPhysicalMaterial({
-        color: couleur_boule,
+        color: ballColor,
         roughness: 0.3,
         metalness: 0.1,
         clearcoat: 1.0, // High-end realistic clearcoat gloss
@@ -132,17 +132,16 @@ function creer_sphere_avec_courbe(x0, y0, couleur_boule, decoration_couleur) {
     // Rotate visual mesh so holes face the camera (+X axis) instead of up (+Z)
     visualMesh.rotation.y = Math.PI / 2;
     
-    boule.add(visualMesh);
-    boule.position.set(x0, y0, R);
+    ball.add(visualMesh);
+    ball.position.set(x0, y0, ballRadius);
     
-    return boule;
+    return ball;
 }
 
 // Improved Team Colors
-let equipe_1_c = 0x00e5ff; // Electric Cyan
-let equipe_2_c = 0xff0022; // Vibrant Professional Red
-let equipe_2_c_bis = 0xff0022;
+let team1Color = 0x00e5ff; // Electric Cyan
+let team2Color = 0xff0022; // Vibrant Professional Red
 
 // Expose them globally for init.js
-let boule_verte = creer_sphere_avec_courbe(45, -6, equipe_1_c, 0xffffff);
-let boule_orange = creer_sphere_avec_courbe(45, 6, equipe_2_c, 0xffffff);
+let cyanBall = createBall(45, -6, team1Color, 0xffffff);
+let redBall = createBall(45, 6, team2Color, 0xffffff);

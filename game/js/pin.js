@@ -1,4 +1,4 @@
-function vecteur(x, y, z) {
+function createVector(x, y, z) {
     return new THREE.Vector3(x, y, z);
 }
 
@@ -70,22 +70,16 @@ const pinMaterial = new THREE.MeshStandardMaterial({
     metalness: 0.05
 });
 
-// Original function kept for compatibility
-function cuisiner_quille(x, y, resolution, couleur) {
-    // We ignore the crude resolution and color, enforcing high quality
-    return null;
-}
-
 const physPinMaterial = Physijs.createMaterial(pinMaterial, 0.4, 0.2); // friction 0.4, restitution 0.2 (low bounce to prevent endless wobbling)
 
-function dessiner_quille_bis(x, y, resolution, couleur) {
+function drawPin(x, y) {
     let pin = new Physijs.ConvexMesh(pinGeometry, physPinMaterial, 2.0); // ConvexMesh perfectly matches the Z-up geometry! Decreased mass to 2.0
     // The geometry is centered at Z=0. Since half height is 1, placing it at Z=1.1 means base is at Z=0.1
     pin.position.set(x, y, 1.1); 
     pin.setDamping(0.1, 0.6); // High angular damping forces it to settle and stop wobbling immediately
     pin.castShadow = true;
     pin.receiveShadow = true;
-    ajouter(pin);
+    addMeshToScene(pin);
     return pin;
 }
 
@@ -102,34 +96,34 @@ function resetLane(team) {
     clearPins(team);
     let x0 = 0;
     let y0 = team === 1 ? -6 : 6;
-    let x_gap = 1.0;
-    let y_gap = 1.15;
+    let xGap = 1.0;
+    let yGap = 1.15;
     
     let arr = team === 1 ? allSpawnedPins1 : allSpawnedPins2;
     let standingArr = [];
     
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < i + 1; j++) {
-            let x = x0 - x_gap * i;
-            let y = y0 - (y_gap / 2) * i + y_gap * j;
-            let quilleMesh = dessiner_quille_bis(x, y, 64, 0xffffff);
-            arr.push(quilleMesh);
+            let x = x0 - xGap * i;
+            let y = y0 - (yGap / 2) * i + yGap * j;
+            let pinMesh = drawPin(x, y);
+            arr.push(pinMesh);
             standingArr.push({
-                quille: quilleMesh,
+                pin: pinMesh,
                 position: { posx: x, posy: y }
             });
         }
     }
     
-    if (team === 1) quilles1 = standingArr;
-    else quilles2 = standingArr;
+    if (team === 1) standingPins1 = standingArr;
+    else standingPins2 = standingArr;
 }
 
 function sweepFallenPins(team) {
-    let standing = team === 1 ? quilles1 : quilles2;
+    let standing = team === 1 ? standingPins1 : standingPins2;
     let all = team === 1 ? allSpawnedPins1 : allSpawnedPins2;
     
-    let standingMeshes = standing.map(obj => obj.quille);
+    let standingMeshes = standing.map(obj => obj.pin);
     
     all.forEach(mesh => {
         if (!standingMeshes.includes(mesh)) {
@@ -154,26 +148,22 @@ function sweepFallenPins(team) {
     else allSpawnedPins2 = standingMeshes.slice();
 }
 
-// Override original to populate our arrays during init
-function dis_quilles(x0, y0, x_gap, y_gap, resolution, couleur) {
+function placePins(x0, y0, xGap, yGap) {
     let team = y0 < 0 ? 1 : 2;
-    let liste_quille_pos = [];
+    let pinLayouts = [];
     let arr = team === 1 ? allSpawnedPins1 : allSpawnedPins2;
 
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < i + 1; j++) {
-            let x = x0 - x_gap * i;
-            let y = y0 - (y_gap / 2) * i + y_gap * j;
-            let quilleMesh = dessiner_quille_bis(x, y, resolution, couleur);
-            arr.push(quilleMesh);
-            liste_quille_pos.push({
-                quille: quilleMesh,
+            let x = x0 - xGap * i;
+            let y = y0 - (yGap / 2) * i + yGap * j;
+            let pinMesh = drawPin(x, y);
+            arr.push(pinMesh);
+            pinLayouts.push({
+                pin: pinMesh,
                 position: { posx: x, posy: y }
             });
         }
     }
-    liste_dis_quilles.push(liste_quille_pos);
+    initialPinLayouts.push(pinLayouts);
 }
-
-// Keep a dummy parallelo function just in case
-function dessiner_parallelo(x, y, a, equipe) {}
