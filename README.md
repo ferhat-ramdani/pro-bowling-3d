@@ -1,8 +1,8 @@
 # Pro Bowling 3D
 
-Pro Bowling 3D is a browser-based, fully interactive 3D bowling simulation. Developed to demonstrate the capabilities of modern web technologies, the project combines real-time 3D rendering with rigid-body physics calculations directly within the browser environment. 
+A full 3D bowling lane running in the browser — real rigid-body physics for the ball and all ten pins, a swipe gesture that becomes an actual 3D throw with spin, and a retro synthwave lane to bowl on. No game engine, no build step: just THREE.js, a physics engine bolted on top, and vanilla JavaScript.
 
-The game supports single-player and local two-player modes with dynamic scoring, accurate pin collision physics, and an immersive retro synthwave environment.
+The part that made this more than "spin a sphere down a lane": turning a 2D finger swipe into a physically correct 3D throw, and getting Bullet-physics-grade collisions to run smoothly in a browser tab.
 
 ## Key Features
 - **Real-Time 3D Rendering:** High-fidelity 3D graphics, including custom textures, dynamic lighting, and environmental fog.
@@ -18,7 +18,7 @@ The project relies entirely on client-side JavaScript, leveraging a stack of spe
 ### THREE.js
 At the core of the visual experience is **THREE.js**, a powerful WebGL wrapper. It is used to generate the scene, cameras, lighting, and geometric meshes. 
 - **Lighting & Materials:** The environment utilizes `HemisphereLight` and `SpotLight` objects to create a vibrant retro synthwave aesthetic. Physical materials (`MeshPhysicalMaterial`, `MeshStandardMaterial`) are used to give the bowling ball its glossy clearcoat and the pins their realistic texture and light reflection.
-- **Raycasting:** User swipe interactions are interpreted by unprojecting 2D screen coordinates into a 3D raycast. This maps the swipe distance and deviation into a physical velocity and angular spin vector.
+- **Raycasting:** User swipe interactions are interpreted by unprojecting 2D screen coordinates into a 3D raycast onto the lane plane. Swipe distance/duration becomes throw speed; how much the swipe deviates from a straight line becomes hook/spin — both feed into the rigid-body velocity applied to the ball.
 
 ### Physijs and Ammo.js
 Real-world physics cannot be hardcoded through simple animation loops. This project integrates **Physijs**, a wrapper that bridges THREE.js with **Ammo.js** (a direct JavaScript port of the Bullet physics engine).
@@ -39,7 +39,6 @@ The game loop and application state are built using a strict Object-Oriented des
   - `html/` - Contains the entry point (`init.html`) and UI markup.
   - `js/` - Modularized JavaScript source code (`init.js`, `ball.js`, `pin.js`, `Score.js`, `animation.js`, `cameraLight.js`).
 - `libs/` - Third-party dependencies (THREE.js, Physijs, Ammo.js, ThreeBSP).
-- `labs/` - Experimental testbed environments used during the development lifecycle.
 
 ## Getting Started
 
