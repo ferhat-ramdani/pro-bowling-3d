@@ -2,6 +2,10 @@
 
 A full 3D bowling lane running in the browser — real rigid-body physics for the ball and all ten pins, a swipe gesture that becomes an actual 3D throw with spin, and a retro synthwave lane to bowl on. No game engine, no build step: just THREE.js, a physics engine bolted on top, and vanilla JavaScript.
 
+<p align=center>
+  <img width="1280" height="613" alt="bowling-game" src="https://github.com/user-attachments/assets/ab19202f-617b-4b3c-8169-60572141d1df" />
+</p>
+
 The part that made this more than "spin a sphere down a lane": turning a 2D finger swipe into a physically correct 3D throw, and getting Bullet-physics-grade collisions to run smoothly in a browser tab.
 
 ## Key Features
